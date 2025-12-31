@@ -1,50 +1,240 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+═══════════════════════════════════════════════════════════════════════════════
+  Sync Impact Report - Constitution v1.0.0
+═══════════════════════════════════════════════════════════════════════════════
 
-## Core Principles
+Version Change: 初版作成 (template → 1.0.0)
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+Principles Established:
+  1. ドメイン駆動設計 (DDD) - バックエンドアーキテクチャの中核
+  2. テスト駆動開発 (TDD) - 品質保証の基盤（非交渉）
+  3. AIペアプログラミング - AI連携の明確な役割分担
+  4. 段階的機能実装 - MVP優先の開発フロー
+  5. スケーラビリティと可観測性 - 運用品質の担保
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+Added Sections:
+  - 技術スタック制約
+  - AI連携ガイドライン
+  - 品質ゲート
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+Templates Status:
+  ✅ plan-template.md - DDD原則、テストゲート整合済み
+  ✅ spec-template.md - MVP優先、受け入れテスト整合済み
+  ✅ tasks-template.md - 実装順序（テスト→実装）整合済み
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+Follow-up TODOs:
+  - なし（全プレースホルダー解決済み）
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+Rationale:
+  初版リリース。プロジェクトの目的（囲碁・将棋大会運営効率化）に基づき、
+  技術スタック（React/TypeScript, Spring Boot/Java21, DynamoDB）と
+  AI活用方針を明文化。16-300名規模対応、予算制約下でのAWS利用を前提とした原則を確立。
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+═══════════════════════════════════════════════════════════════════════════════
+-->
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+# Swiss Stage Web プロジェクト憲章
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## コア原則
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### I. ドメイン駆動設計 (DDD)
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+**必須事項:**
+- バックエンドは必ずDDDレイヤー構造に従う：
+  - **application層**: ユースケース・アプリケーションサービス
+  - **domain層**: ビジネスロジック・エンティティ・リポジトリインターフェース
+  - **infrastructure層**: DB・外部API実装
+  - **presentation層**: REST APIエンドポイント
+- ドメインロジックは必ず `domain層` に集約し、`infrastructure層` に依存してはならない（MUST）
+- 各層は明確な責務を持ち、レイヤー間の依存は一方向とする
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**理由:**  
+スイス方式トーナメントのマッチングロジックは複雑なドメインルール（勝ち点差0.5点以内、未対戦者同士など）を含むため、ビジネスロジックをドメイン層に隔離することで保守性・テスト容易性を確保する。
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+---
+
+### II. テスト駆動開発 (TDD)【非交渉】
+
+**必須事項:**
+- すべての機能実装は以下の手順を厳守する（MUST）:
+  1. 受け入れテストシナリオを仕様書に明記
+  2. ユーザー承認を得る
+  3. テストコードを先に作成（単体テスト・統合テスト）
+  4. テストが失敗することを確認（Red）
+  5. 最小限の実装でテストを通す（Green）
+  6. リファクタリング
+- テストカバレッジ目標: 
+  - **domain層**: 90%以上
+  - **application層**: 80%以上
+  - **presentation層**: 70%以上
+  - **E2Eテスト（Playwright）**: 主要ユーザーフロー全網羅
+
+**例外:**  
+プロトタイプ検証時のみTDD省略可。ただし、本実装移行時は必ずテストを追加する。
+
+**理由:**  
+大会運営中の対戦組合せミスは参加者体験を著しく損なう。テストファーストにより信頼性を担保し、リグレッションを防ぐ。
+
+---
+
+### III. AIペアプログラミング
+
+**AIに実施させること（MUST）:**
+- 日本語での仕様書・ドキュメント記述
+- 要件を満たすコード生成（TDD手順に従う）
+- DDD設計提案（レイヤー分割・エンティティ設計）
+- UIコンポーネントのライティング（Material-UI使用）
+
+**AIに実施させないこと（MUST NOT）:**
+- 技術スタック変更の独断決定（React, Spring Boot, DynamoDBは固定）
+- プロジェクト目的・方向性の変更提案（相談は可）
+- テスト省略の提案
+- セキュリティ要件の緩和
+
+**理由:**  
+AI活用による開発効率化とプロジェクトの一貫性維持を両立するため、明確な役割分担を定める。
+
+---
+
+### IV. 段階的機能実装
+
+**必須事項:**
+- 機能は必ず優先度（P1/P2/P3）をつけて実装する（MUST）
+- **P1（優先度高）**: MVP機能として以下を必ず含める
+  - ログイン（Google認証）
+  - 参加者一覧（CSV入出力）
+  - 対戦表（自動マッチング、対戦結果入力）
+  - ランキング
+  - 設定（大会タイトル、グループ数、対戦回数）
+  - 参加者向け参照URL発行
+- **P2（優先度中）**: 団体戦対応、スマホレスポンシブ、対戦結果送信機能
+- **P3（将来）**: 追加機能提案
+
+**対象外（やらないこと）:**
+- 課金・決済機能
+- ネイティブアプリ（iOS/Android/Windows）
+- エントリーフォーム（外部フォーム連携を想定）
+
+**理由:**  
+限られた予算で16-300名規模に対応するため、MVP機能に集中し段階的にリリースする。
+
+---
+
+### V. スケーラビリティと可観測性
+
+**必須事項:**
+- パフォーマンス目標:
+  - **同時接続**: 300名規模に耐えられること
+  - **応答時間**: マッチング生成は5秒以内（32名/グループ時）
+  - **可用性**: 大会中（2-3時間）は無停止稼働
+- 可観測性:
+  - **ログ**: 構造化ログ（JSON形式）をCloudWatch Logsに出力（MUST）
+  - **監視**: CloudWatch Alarmsで応答時間・エラー率を監視
+  - **トレーシング**: 主要APIエンドポイントのレスポンスタイム記録
+
+**理由:**  
+大会運営中のシステム停止は致命的。AWS無料枠・低コストインスタンスを活用しつつ、必要な性能を確保する。
+
+---
+
+## 技術スタック制約
+
+> **詳細仕様**: [tech-stack.md](tech-stack.md) を参照
+
+以下の技術スタックは**変更不可**とする（MUST NOT CHANGE）:
+
+### フロントエンド
+- **言語**: TypeScript
+- **フレームワーク**: React
+- **ビルドツール**: Vite
+- **UIライブラリ**: Material-UI
+- **ルーティング**: React Router
+- **テスト**: Jest
+- **静的解析**: ESLint
+
+### バックエンド
+- **言語**: Java 21
+- **フレームワーク**: Spring Boot
+- **ビルドツール**: Gradle
+- **テスト**: JUnit 5
+
+### インフラ
+- **クラウド**: AWS (EC2, Route53, VPC)
+- **データベース**: DynamoDB
+- **予算方針**: 無料枠・低コストインスタンス優先、300名規模対応を前提
+
+### E2Eテスト
+- **ツール**: Playwright
+
+**変更が必要な場合:**  
+技術的負債・パフォーマンス問題が明確な場合のみ、憲章改定プロセスに従い提案可能。
+
+---
+
+## AI連携ガイドライン
+
+> **実践ガイド**: [ai-collaboration-guide.md](ai-collaboration-guide.md) を参照
+
+### コード生成時のルール
+1. **日本語優先**: コメント・仕様書・変数名（ローマ字可）は日本語
+2. **TDD厳守**: テストコード生成 → 実装コード生成の順序を守る
+3. **DDD準拠**: レイヤー構造を明示し、依存方向を逆転させない
+4. **冗長性排除**: YAGNI原則（今必要でない機能は実装しない）
+
+### 設計提案時のルール
+1. **代替案提示**: 複数の設計オプションを提示し、トレードオフを明記
+2. **複雑性の正当化**: 複雑な設計を提案する場合、なぜシンプルな方法が不十分かを説明（MUST）
+3. **既存パターン尊重**: プロジェクト内の既存実装パターンとの整合性を保つ
+
+---
+
+## 品質ゲート
+
+### フェーズ0（調査）
+- [ ] 憲章の原則に違反していないか確認
+- [ ] 技術スタック制約を遵守しているか
+
+### フェーズ1（設計）
+- [ ] DDDレイヤー構造が明確か
+- [ ] 受け入れテストシナリオが定義されているか
+- [ ] パフォーマンス目標（300名対応、5秒以内マッチング）を満たせるか
+
+### フェーズ2（実装）
+- [ ] テストコードが先に作成されているか
+- [ ] テストが失敗（Red）することを確認したか
+- [ ] 実装後テストが成功（Green）したか
+- [ ] コードレビューでDDD原則違反がないか
+
+### リリース前
+- [ ] E2Eテスト（Playwright）が全て通過しているか
+- [ ] CloudWatch Logsにエラーログが出ていないか
+- [ ] 負荷テスト（300名同時接続想定）を実施したか
+
+---
+
+## ガバナンス
+
+### 憲章の優先順位
+- この憲章はすべての開発プラクティスに優先する
+- コードレビュー・PR承認時に憲章違反がないか必ず確認する（MUST）
+
+### 改定プロセス
+1. 改定提案をIssueまたはPRとして作成
+2. 変更理由・影響範囲・移行計画を明記
+3. プロジェクトオーナー承認を得る
+4. 関連テンプレート（plan-template.md, spec-template.md, tasks-template.md）を同時更新
+
+### バージョン管理
+- **MAJOR**: 原則の削除・非互換な変更（例: DDD廃止、技術スタック変更）
+- **MINOR**: 新原則追加・既存原則の拡張（例: セキュリティ原則追加）
+- **PATCH**: 文言修正・明確化（例: 誤字修正、例示追加）
+
+### 複雑性の例外申請
+複雑な実装が避けられない場合、以下を文書化し承認を得る:
+- **違反内容**: どの原則に反するか
+- **必要性**: なぜ必要か
+- **代替案**: よりシンプルな方法を検討し、なぜ不十分かを説明
+
+---
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-31 | **Last Amended**: 2025-12-31
