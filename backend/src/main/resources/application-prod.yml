@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+aws:
+  dynamodb:
+    endpoint: # Empty for production (use AWS default endpoint)
+
+logging:
+  level:
+    com.swiss_stage: INFO
+    org.springframework.security: INFO

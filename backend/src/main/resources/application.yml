@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: swiss-stage-backend
+  
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+            redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:8080/login/oauth2/code/google}
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-stacktrace: never
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  expiration-hours: ${JWT_EXPIRATION_HOURS:24}
+
+aws:
+  region: ${AWS_REGION:ap-northeast-1}
+  dynamodb:
+    endpoint: ${DYNAMODB_ENDPOINT:}
+    table-name: ${DYNAMODB_TABLE_NAME:swiss_stage_table}
+
+logging:
+  level:
+    root: ${LOGGING_LEVEL_ROOT:INFO}
+    com.swiss_stage: ${LOGGING_LEVEL_COM_SWISS_STAGE:DEBUG}
