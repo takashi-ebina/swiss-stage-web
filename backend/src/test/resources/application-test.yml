@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: swiss-stage-test
+  
+  # DynamoDB Local設定 (テスト用)
+  dynamodb:
+    endpoint: http://localhost:8000
+    region: ap-northeast-1
+    
+# JWT設定 (テスト用)
+jwt:
+  secret: test-secret-key-for-jwt-token-signing-at-least-256-bits-long
+  expiration: 86400000  # 24時間
+
+# ログ設定
+logging:
+  level:
+    com.swiss_stage: DEBUG
+    root: INFO

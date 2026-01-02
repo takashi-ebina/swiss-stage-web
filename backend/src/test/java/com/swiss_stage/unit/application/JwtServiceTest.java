@@ -90,8 +90,8 @@ class JwtServiceTest {
 
         // Assert
         assertNotNull(session);
-        assertEquals(userId, session.getUserId());
-        assertNotNull(session.getJwtToken());
+        assertEquals(userId, session.userId());
+        assertNotNull(session.jwtToken());
         assertFalse(session.isExpired());
         assertTrue(session.isValid());
     }

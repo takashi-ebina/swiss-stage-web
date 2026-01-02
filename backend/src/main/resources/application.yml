@@ -40,3 +40,7 @@ logging:
   level:
     root: ${LOGGING_LEVEL_ROOT:INFO}
     com.swiss_stage: ${LOGGING_LEVEL_COM_SWISS_STAGE:DEBUG}
+
+app:
+  frontend:
+    url: ${FRONTEND_URL:http://localhost:3000}

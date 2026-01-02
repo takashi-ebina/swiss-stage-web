@@ -75,11 +75,11 @@
 > 実装前に**FAIL（Red）することを確認する（MUST）**  
 > 実装後テストが通過（Green）したら、リファクタリング
 
-- [ ] T016 [P] [US1] ドメイン層単体テスト: backend/src/test/java/com/swiss_stage/unit/domain/UserTest.java（User.create, updateLastLoginAt, バリデーション）
-- [ ] T017 [P] [US1] ドメイン層単体テスト: backend/src/test/java/com/swiss_stage/unit/domain/AuthSessionTest.java（AuthSession.create, isExpired, isValid）
-- [ ] T018 [P] [US1] アプリケーション層単体テスト: backend/src/test/java/com/swiss_stage/unit/application/UserServiceTest.java（findOrCreateUser）
-- [ ] T019 [P] [US1] アプリケーション層単体テスト: backend/src/test/java/com/swiss_stage/unit/application/JwtServiceTest.java（generateToken, validateTokenAndGetUserId）
-- [ ] T020 [US1] リポジトリ統合テスト: backend/src/test/java/com/swiss_stage/integration/repository/DynamoDbUserRepositoryTest.java（save, findById, DynamoDB Local使用）
+- [X] T016 [P] [US1] ドメイン層単体テスト: backend/src/test/java/com/swiss_stage/unit/domain/UserTest.java（User.create, updateLastLoginAt, バリデーション）
+- [X] T017 [P] [US1] ドメイン層単体テスト: backend/src/test/java/com/swiss_stage/unit/domain/AuthSessionTest.java（AuthSession.create, isExpired, isValid）
+- [X] T018 [P] [US1] アプリケーション層単体テスト: backend/src/test/java/com/swiss_stage/unit/application/UserServiceTest.java（findOrCreateUser）
+- [X] T019 [P] [US1] アプリケーション層単体テスト: backend/src/test/java/com/swiss_stage/unit/application/JwtServiceTest.java（generateToken, validateTokenAndGetUserId）
+- [X] T020 [US1] リポジトリ統合テスト: backend/src/test/java/com/swiss_stage/integration/repository/DynamoDbUserRepositoryTest.java（save, findById, DynamoDB Local使用）
 - [ ] T021 [US1] OAuth2認証フローE2Eテスト: frontend/tests/e2e/login.spec.ts（Playwright: ログイン → ダッシュボードリダイレクト → ユーザー名表示）
 - [ ] T022 [US1] ログアウトフローE2Eテスト: frontend/tests/e2e/logout.spec.ts（Playwright: ログアウト → ログイン画面リダイレクト → Cookie削除確認）
 
@@ -87,39 +87,39 @@
 
 #### バックエンド（domain層）
 
-- [ ] T023 [P] [US1] Userエンティティ作成: backend/src/main/java/com/swiss_stage/domain/model/User.java（create, updateLastLoginAt, バリデーション）
-- [ ] T024 [P] [US1] AuthSession値オブジェクト作成: backend/src/main/java/com/swiss_stage/domain/model/AuthSession.java（create, isExpired, isValid）
-- [ ] T025 [P] [US1] UserRepositoryインターフェース作成: backend/src/main/java/com/swiss_stage/domain/repository/UserRepository.java（findById, findByGoogleId, save, deleteById）
+- [X] T023 [P] [US1] Userエンティティ作成: backend/src/main/java/com/swiss_stage/domain/model/User.java（create, updateLastLoginAt, バリデーション）
+- [X] T024 [P] [US1] AuthSession値オブジェクト作成: backend/src/main/java/com/swiss_stage/domain/model/AuthSession.java（create, isExpired, isValid）
+- [X] T025 [P] [US1] UserRepositoryインターフェース作成: backend/src/main/java/com/swiss_stage/domain/repository/UserRepository.java（findById, findByGoogleId, save, deleteById）
 
 #### バックエンド（infrastructure層）
 
-- [ ] T026 [US1] DynamoDbUserRepository実装: backend/src/main/java/com/swiss_stage/infrastructure/repository/DynamoDbUserRepository.java（UserRepositoryの実装、PK/SK設計準拠）
-- [ ] T027 [P] [US1] DynamoDB設定クラス作成: backend/src/main/java/com/swiss_stage/infrastructure/config/DynamoDbConfig.java（DynamoDbClientビルド、エンドポイント設定）
+- [X] T026 [US1] DynamoDbUserRepository実装: backend/src/main/java/com/swiss_stage/infrastructure/repository/DynamoDbUserRepository.java（UserRepositoryの実装、PK/SK設計準拠）
+- [X] T027 [P] [US1] DynamoDB設定クラス作成: backend/src/main/java/com/swiss_stage/infrastructure/config/DynamoDbConfig.java（DynamoDbClientビルド、エンドポイント設定）
 
 #### バックエンド（application層）
 
-- [ ] T028 [US1] UserService作成: backend/src/main/java/com/swiss_stage/application/service/UserService.java（findOrCreateUser、既存ユーザーはlastLoginAt更新、新規ユーザーは自動登録）
-- [ ] T029 [P] [US1] JwtService作成: backend/src/main/java/com/swiss_stage/application/service/JwtService.java（generateToken, validateTokenAndGetUserId、HS256署名）
-- [ ] T030 [P] [US1] UserDto作成: backend/src/main/java/com/swiss_stage/application/dto/UserDto.java（userId, displayName, createdAt, lastLoginAt）
+- [X] T028 [US1] UserService作成: backend/src/main/java/com/swiss_stage/application/service/UserService.java（findOrCreateUser、既存ユーザーはlastLoginAt更新、新規ユーザーは自動登録）
+- [X] T029 [P] [US1] JwtService作成: backend/src/main/java/com/swiss_stage/application/service/JwtService.java（generateToken, validateTokenAndGetUserId、HS256署名）
+- [X] T030 [P] [US1] UserDto作成: backend/src/main/java/com/swiss_stage/application/dto/UserDto.java（userId, displayName, createdAt, lastLoginAt）
 
 #### バックエンド（presentation層）
 
-- [ ] T031 [US1] OAuth2AuthenticationSuccessHandler作成: backend/src/main/java/com/swiss_stage/presentation/handler/OAuth2AuthenticationSuccessHandler.java（JWT生成、HTTP-only Cookie設定、ダッシュボードリダイレクト）
-- [ ] T032 [P] [US1] AuthController作成: backend/src/main/java/com/swiss_stage/presentation/controller/AuthController.java（GET /api/auth/me、POST /api/auth/logout）
-- [ ] T033 [P] [US1] JwtAuthenticationFilter作成: backend/src/main/java/com/swiss_stage/presentation/filter/JwtAuthenticationFilter.java（Cookie → JWT検証 → SecurityContext設定）
-- [ ] T034 [US1] SecurityConfig完成: OAuth2Login設定追加（successHandler, loginPage, defaultSuccessUrl）、JwtAuthenticationFilterをフィルターチェーンに追加
+- [X] T031 [US1] OAuth2AuthenticationSuccessHandler作成: backend/src/main/java/com/swiss_stage/presentation/handler/OAuth2AuthenticationSuccessHandler.java（JWT生成、HTTP-only Cookie設定、ダッシュボードリダイレクト）
+- [X] T032 [P] [US1] AuthController作成: backend/src/main/java/com/swiss_stage/presentation/controller/AuthController.java（GET /api/auth/me、POST /api/auth/logout）
+- [X] T033 [P] [US1] JwtAuthenticationFilter作成: backend/src/main/java/com/swiss_stage/presentation/filter/JwtAuthenticationFilter.java（Cookie → JWT検証 → SecurityContext設定）
+- [X] T034 [US1] SecurityConfig完成: OAuth2Login設定追加（successHandler, loginPage, defaultSuccessUrl）、JwtAuthenticationFilterをフィルターチェーンに追加
 
 #### フロントエンド
 
-- [ ] T035 [P] [US1] Axiosインスタンス作成: frontend/src/utils/apiClient.ts（baseURL設定、withCredentials: true）
-- [ ] T036 [P] [US1] User型定義: frontend/src/types/User.ts（userId, displayName, createdAt, lastLoginAt）
-- [ ] T037 [P] [US1] authServiceモジュール作成: frontend/src/services/authService.ts（getCurrentUser, logout API呼び出し）
-- [ ] T038 [P] [US1] useAuthフック作成: frontend/src/hooks/useAuth.ts（認証状態管理、ログイン/ログアウト処理）
-- [ ] T039 [P] [US1] GoogleLoginButtonコンポーネント作成: frontend/src/components/auth/GoogleLoginButton.tsx（Material-UI Button、/oauth2/authorization/googleへリンク）
-- [ ] T040 [P] [US1] LogoutButtonコンポーネント作成: frontend/src/components/auth/LogoutButton.tsx（Material-UI Button、authService.logout呼び出し）
-- [ ] T041 [US1] LoginPage作成: frontend/src/pages/LoginPage.tsx（中央配置、GoogleLoginButton表示、エラーメッセージ表示）
-- [ ] T042 [US1] DashboardPage作成: frontend/src/pages/DashboardPage.tsx（ヘッダーにユーザー名表示、LogoutButton配置）
-- [ ] T043 [US1] ルーティング設定: frontend/src/App.tsx（React Router: /login, /dashboard, 未認証時は/loginへリダイレクト）
+- [X] T035 [P] [US1] Axiosインスタンス作成: frontend/src/utils/apiClient.ts（baseURL設定、withCredentials: true）
+- [X] T036 [P] [US1] User型定義: frontend/src/types/User.ts（userId, displayName, createdAt, lastLoginAt）
+- [X] T037 [P] [US1] authServiceモジュール作成: frontend/src/services/authService.ts（getCurrentUser, logout API呼び出し）
+- [X] T038 [P] [US1] useAuthフック作成: frontend/src/hooks/useAuth.ts（認証状態管理、ログイン/ログアウト処理）
+- [X] T039 [P] [US1] GoogleLoginButtonコンポーネント作成: frontend/src/components/auth/GoogleLoginButton.tsx（Material-UI Button、/oauth2/authorization/googleへリンク）
+- [X] T040 [P] [US1] LogoutButtonコンポーネント作成: frontend/src/components/auth/LogoutButton.tsx（Material-UI Button、authService.logout呼び出し）
+- [X] T041 [US1] LoginPage作成: frontend/src/pages/LoginPage.tsx（中央配置、GoogleLoginButton表示、エラーメッセージ表示）
+- [X] T042 [US1] DashboardPage作成: frontend/src/pages/DashboardPage.tsx（ヘッダーにユーザー名表示、LogoutButton配置）
+- [X] T043 [US1] ルーティング設定: frontend/src/App.tsx（React Router: /login, /dashboard, 未認証時は/loginへリダイレクト）
 
 #### ログ・監視
 
@@ -143,10 +143,10 @@
 
 ### ユーザーストーリー 2 の実装
 
-- [ ] T048 [US2] OAuth2AuthenticationFailureHandler作成: backend/src/main/java/com/swiss_stage/presentation/handler/OAuth2AuthenticationFailureHandler.java（エラーコード判定、ユーザーフレンドリーなメッセージ生成、ログイン画面リダイレクト）
-- [ ] T049 [US2] SecurityConfig更新: OAuth2Login設定にfailureHandler追加
-- [ ] T050 [P] [US2] LoginPage更新: frontend/src/pages/LoginPage.tsx（URLクエリパラメータerrorを取得、エラーメッセージ表示）
-- [ ] T051 [P] [US2] ログ追加: OAuth2AuthenticationFailureHandlerにerrorCode記録（CloudWatch Logs）
+- [X] T048 [US2] OAuth2AuthenticationFailureHandler作成: backend/src/main/java/com/swiss_stage/presentation/handler/OAuth2AuthenticationFailureHandler.java（エラーコード判定、ユーザーフレンドリーなメッセージ生成、ログイン画面リダイレクト）
+- [X] T049 [US2] SecurityConfig更新: OAuth2Login設定にfailureHandler追加
+- [X] T050 [P] [US2] LoginPage更新: frontend/src/pages/LoginPage.tsx（URLクエリパラメータerrorを取得、エラーメッセージ表示）
+- [X] T051 [P] [US2] ログ追加: OAuth2AuthenticationFailureHandlerにerrorCode記録（CloudWatch Logs）
 
 **チェックポイント**: ✅ ユーザーストーリー2は**単体で完全に動作しテスト可能**
 
@@ -169,24 +169,24 @@
 
 #### バックエンド（application層）
 
-- [ ] T056 [US3] UserService更新: backend/src/main/java/com/swiss_stage/application/service/UserService.java（deleteAccountメソッド追加: 進行中トーナメントチェック、ユーザー削除、トーナメントデータカスケード削除）
-- [ ] T057 [P] [US3] DeleteAccountRequest DTO作成: backend/src/main/java/com/swiss_stage/application/dto/DeleteAccountRequest.java（email, confirmation）
+- [X] T056 [US3] UserService更新: backend/src/main/java/com/swiss_stage/application/service/UserService.java（deleteAccountメソッド追加: 進行中トーナメントチェック、ユーザー削除、トーナメントデータaカスケード削除）
+- [X] T057 [P] [US3] DeleteAccountRequest DTO作成: backend/src/main/java/com/swiss_stage/application/dto/DeleteAccountRequest.java（email, confirmation）
 
 #### バックエンド（presentation層）
 
-- [ ] T058 [US3] UserController作成: backend/src/main/java/com/swiss_stage/presentation/controller/UserController.java（GET /api/users/{userId}、DELETE /api/users/{userId}）
-- [ ] T059 [US3] SecurityConfig更新: DELETE /api/users/{userId}を認証必須に設定、自分のuserIdのみ削除可能なアクセス制御
+- [X] T058 [US3] UserController作成: backend/src/main/java/com/swiss_stage/presentation/controller/UserController.java（GET /api/users/{userId}、DELETE /api/users/{userId}）
+- [X] T059 [US3] SecurityConfig更新: DELETE /api/users/{userId}を認証必須に設定、自分のuserIdのみ削除可能なアクセス制御
 
 #### フロントエンド
 
-- [ ] T060 [P] [US3] userServiceモジュール作成: frontend/src/services/userService.ts（deleteAccount API呼び出し）
-- [ ] T061 [P] [US3] DeleteAccountDialogコンポーネント作成: frontend/src/components/account/DeleteAccountDialog.tsx（Material-UI Dialog、2段階確認、メールアドレス再入力、削除実行ボタン）
-- [ ] T062 [US3] AccountSettingsPage作成: frontend/src/pages/AccountSettingsPage.tsx（アカウント削除ボタン、DeleteAccountDialog表示）
-- [ ] T063 [US3] ルーティング更新: frontend/src/App.tsx（/account-settingsルート追加）
+- [X] T060 [P] [US3] userServiceモジュール作成: frontend/src/services/userService.ts（deleteAccount API呼び出し）
+- [X] T061 [P] [US3] DeleteAccountDialogコンポーネント作成: frontend/src/components/account/DeleteAccountDialog.tsx（Material-UI Dialog、2段階確認、メールアドレス再入力、削除実行ボタン）
+- [X] T062 [US3] AccountSettingsPage作成: frontend/src/pages/AccountSettingsPage.tsx（アカウント削除ボタン、DeleteAccountDialog表示）
+- [X] T063 [US3] ルーティング更新: frontend/src/App.tsx（/account-settingsルート追加）
 
 #### ログ・監視
 
-- [ ] T064 [P] [US3] ログ追加: UserService.deleteAccountにuserId記録（監査ログ、CloudWatch Logs）、削除成功/失敗イベント記録
+- [X] T064 [P] [US3] ログ追加: UserService.deleteAccountにuserId記録（監査ログ、CloudWatch Logs）、削除成功/失敗イベント記録
 
 **チェックポイント**: ✅ ユーザーストーリー3は**単体で完全に動作しテスト可能**
 
@@ -197,11 +197,11 @@
 **目的**: 横断的関心事とユーザー体験の向上
 
 - [ ] T065 [P] E2Eテスト統合実行スクリプト作成: frontend/package.jsonにtest:e2e:allコマンド追加（全E2Eテストを順次実行）
-- [ ] T066 [P] ローディングインジケーター追加: frontend/src/components/common/LoadingIndicator.tsx（Material-UI CircularProgress、API呼び出し中に表示）
-- [ ] T067 [P] Toastメッセージ統合: frontend/src/utils/toast.ts（成功/エラーメッセージ表示、Material-UI Snackbar使用）
-- [ ] T068 [P] セッションタイムアウトハンドリング: frontend/src/hooks/useAuth.ts（JWT有効期限切れ時にログイン画面リダイレクト）
+- [X] T066 [P] ローディングインジケーター追加: frontend/src/components/common/LoadingIndicator.tsx（Material-UI CircularProgress、API呼び出し中に表示）
+- [X] T067 [P] Toastメッセージ統合: frontend/src/contexts/ToastContext.tsx（成功/エラーメッセージ表示、Material-UI Snackbar使用）
+- [X] T068 [P] セッションタイムアウトハンドリング: frontend/src/hooks/useAuth.ts（JWT有効期限切れ時にログイン画面リダイレクト）
 - [ ] T069 [P] CloudWatch Metricsカスタムメトリクス追加: backend/src/main/java/com/swiss_stage/infrastructure/metrics/（認証成功率、JWT検証エラー数）
-- [ ] T070 [P] README.md更新: quickstart.mdの内容を反映（セットアップ手順、テスト実行、トラブルシューティング）
+- [X] T070 [P] README.md更新: quickstart.mdの内容を反映（セットアップ手順、テスト実行、トラブルシューティング）
 - [ ] T071 統合動作確認: ローカル環境でログイン → ダッシュボード → アカウント削除フローを手動テスト
 
 ---

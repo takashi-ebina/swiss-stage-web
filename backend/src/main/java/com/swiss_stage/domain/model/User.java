@@ -44,6 +44,21 @@ public class User {
     }
 
     /**
+     * ファクトリメソッド（既存データからの復元）
+     * @param userId ユーザーID（UUID）
+     * @param googleId Google OAuth2のSub
+     * @param email メールアドレス
+     * @param displayName 表示名
+     * @param createdAt 作成日時
+     * @param lastLoginAt 最終ログイン日時
+     * @return Userエンティティ
+     */
+    public static User restore(UUID userId, String googleId, String email, String displayName, 
+                               Instant createdAt, Instant lastLoginAt) {
+        return new User(userId, googleId, email, displayName, createdAt, lastLoginAt);
+    }
+
+    /**
      * 最終ログイン日時更新
      * @param lastLoginAt 最終ログイン日時
      */

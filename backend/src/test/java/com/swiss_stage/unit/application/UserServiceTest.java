@@ -1,5 +1,6 @@
 package com.swiss_stage.unit.application;
 
+import com.swiss_stage.application.dto.UserDto;
 import com.swiss_stage.application.service.UserService;
 import com.swiss_stage.domain.model.User;
 import com.swiss_stage.domain.repository.UserRepository;
@@ -44,12 +45,12 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(existingUser);
 
         // Act
-        User result = userService.findOrCreateUser(googleId, email, displayName);
+        UserDto result = userService.findOrCreateUser(googleId, email, displayName);
 
         // Assert
         assertNotNull(result);
-        assertEquals(googleId, result.getGoogleId());
-        assertEquals(email, result.getEmail());
+        assertEquals(existingUser.getUserId(), result.getUserId());
+        assertEquals(displayName, result.getDisplayName());
         verify(userRepository, times(1)).findByGoogleId(googleId);
         verify(userRepository, times(1)).save(any(User.class)); // lastLoginAt更新のため保存
     }
@@ -65,12 +66,11 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        User result = userService.findOrCreateUser(googleId, email, displayName);
+        UserDto result = userService.findOrCreateUser(googleId, email, displayName);
 
         // Assert
         assertNotNull(result);
-        assertEquals(googleId, result.getGoogleId());
-        assertEquals(email, result.getEmail());
+        assertNotNull(result.getUserId());
         assertEquals(displayName, result.getDisplayName());
         verify(userRepository, times(1)).findByGoogleId(googleId);
         verify(userRepository, times(1)).save(any(User.class));
@@ -88,7 +88,7 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // Act
-        Optional<User> result = userService.findById(userId);
+        Optional<UserDto> result = userService.findById(userId.toString());
 
         // Assert
         assertTrue(result.isPresent());
@@ -103,7 +103,7 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act
-        Optional<User> result = userService.findById(userId);
+        Optional<UserDto> result = userService.findById(userId.toString());
 
         // Assert
         assertFalse(result.isPresent());

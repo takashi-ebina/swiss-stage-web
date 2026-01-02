@@ -50,3 +50,17 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootRun {
+    if (file('.env.local').exists()) {
+        file('.env.local').readLines().each { line ->
+            // Skip empty lines and comments
+            if (line && !line.trim().startsWith('#') && line.contains('=')) {
+                def parts = line.split('=', 2)
+                if (parts.length == 2) {
+                    environment parts[0].trim(), parts[1].trim()
+                }
+            }
+        }
+    }
+}

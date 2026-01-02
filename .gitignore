@@ -1,0 +1,92 @@
+# ========================================
+# Node.js / JavaScript / TypeScript
+# ========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Build outputs
+dist/
+build/
+.cache/
+coverage/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ========================================
+# Java / Spring Boot / Gradle
+# ========================================
+# Gradle
+.gradle/
+build/
+out/
+bin/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Spring Boot
+*.jar
+*.war
+*.ear
+*.class
+target/
+
+# IDE files
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+.classpath
+.project
+.settings/
+
+# ========================================
+# Python (if needed for scripts)
+# ========================================
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# ========================================
+# AWS / Cloud
+# ========================================
+*.pem
+*.key
+*.crt
+.aws/
+
+# ========================================
+# Operating System
+# ========================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*~
+
+# ========================================
+# Testing
+# ========================================
+test-results/
+playwright-report/
+coverage/
+
+# ========================================
+# Logs
+# ========================================
+logs/
+*.log

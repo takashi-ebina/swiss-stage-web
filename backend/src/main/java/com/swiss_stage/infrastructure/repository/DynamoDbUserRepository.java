@@ -131,6 +131,6 @@ public class DynamoDbUserRepository implements UserRepository {
         Instant createdAt = Instant.ofEpochMilli(Long.parseLong(item.get("createdAt").n()));
         Instant lastLoginAt = Instant.ofEpochMilli(Long.parseLong(item.get("lastLoginAt").n()));
 
-        return User.create(userId, googleId, email, displayName);
+        return User.restore(userId, googleId, email, displayName, createdAt, lastLoginAt);
     }
 }

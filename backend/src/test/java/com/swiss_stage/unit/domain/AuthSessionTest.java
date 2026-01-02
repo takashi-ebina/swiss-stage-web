@@ -27,10 +27,10 @@ class AuthSessionTest {
 
         // Assert
         assertNotNull(session);
-        assertEquals(jwtToken, session.getJwtToken());
-        assertEquals(userId, session.getUserId());
-        assertNotNull(session.getExpiresAt());
-        assertTrue(session.getExpiresAt().isAfter(Instant.now()));
+        assertEquals(jwtToken, session.jwtToken());
+        assertEquals(userId, session.userId());
+        assertNotNull(session.expiresAt());
+        assertTrue(session.expiresAt().isAfter(Instant.now()));
     }
 
     @Test
