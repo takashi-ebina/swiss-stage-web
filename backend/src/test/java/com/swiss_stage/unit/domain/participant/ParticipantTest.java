@@ -27,8 +27,7 @@ class ParticipantTest {
 
         // Act
         Participant participant = new Participant(
-            participantId, groupId, affiliation, name, rank, false, registrationOrder
-        );
+                participantId, groupId, affiliation, name, rank, false, registrationOrder);
 
         // Assert
         assertEquals(participantId, participant.getParticipantId());
@@ -50,8 +49,7 @@ class ParticipantTest {
 
         // Act
         Participant participant = new Participant(
-            participantId, groupId, null, name, rank, false, 1
-        );
+                participantId, groupId, null, name, rank, false, 1);
 
         // Assert
         assertNull(participant.getAffiliation(), "affiliationはnull許容");
@@ -66,8 +64,7 @@ class ParticipantTest {
 
         // Act
         Participant participant = new Participant(
-            participantId, groupId, null, name, null, true, 1
-        );
+                participantId, groupId, null, name, null, true, 1);
 
         // Assert
         assertTrue(participant.isDummy(), "isDummyがtrueであること");
@@ -79,27 +76,27 @@ class ParticipantTest {
     void testConstructor_NullParticipantId() {
         // Act & Assert
         assertThrows(
-            NullPointerException.class,
-            () -> new Participant(null, UUID.randomUUID(), null, "名前", Rank.parse("3段"), false, 1)
-        );
+                NullPointerException.class,
+                () -> new Participant(null, UUID.randomUUID(), null, "名前", Rank.parse("3段"), false,
+                        1));
     }
 
     @Test
     void testConstructor_NullGroupId() {
         // Act & Assert
         assertThrows(
-            NullPointerException.class,
-            () -> new Participant(UUID.randomUUID(), null, null, "名前", Rank.parse("3段"), false, 1)
-        );
+                NullPointerException.class,
+                () -> new Participant(UUID.randomUUID(), null, null, "名前", Rank.parse("3段"), false,
+                        1));
     }
 
     @Test
     void testConstructor_NullName() {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, null, Rank.parse("3段"), false, 1)
-        );
+                IllegalArgumentException.class,
+                () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, null,
+                        Rank.parse("3段"), false, 1));
         assertTrue(exception.getMessage().contains("nameは必須です"));
     }
 
@@ -107,9 +104,9 @@ class ParticipantTest {
     void testConstructor_EmptyName() {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, "", Rank.parse("3段"), false, 1)
-        );
+                IllegalArgumentException.class,
+                () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, "",
+                        Rank.parse("3段"), false, 1));
         assertTrue(exception.getMessage().contains("nameは必須です"));
     }
 
@@ -117,9 +114,9 @@ class ParticipantTest {
     void testConstructor_BlankName() {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, "   ", Rank.parse("3段"), false, 1)
-        );
+                IllegalArgumentException.class,
+                () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, "   ",
+                        Rank.parse("3段"), false, 1));
         assertTrue(exception.getMessage().contains("nameは必須です"));
     }
 
@@ -131,8 +128,7 @@ class ParticipantTest {
 
         // Act
         Participant participant = new Participant(
-            UUID.randomUUID(), UUID.randomUUID(), null, name, Rank.parse("3段"), false, 1
-        );
+                UUID.randomUUID(), UUID.randomUUID(), null, name, Rank.parse("3段"), false, 1);
 
         // Assert
         assertEquals(name, participant.getName());
@@ -145,9 +141,9 @@ class ParticipantTest {
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, name, Rank.parse("3段"), false, 1)
-        );
+                IllegalArgumentException.class,
+                () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, name,
+                        Rank.parse("3段"), false, 1));
         assertTrue(exception.getMessage().contains("50文字以内"));
     }
 
@@ -159,8 +155,8 @@ class ParticipantTest {
 
         // Act
         Participant participant = new Participant(
-            UUID.randomUUID(), UUID.randomUUID(), affiliation, "名前", Rank.parse("3段"), false, 1
-        );
+                UUID.randomUUID(), UUID.randomUUID(), affiliation, "名前", Rank.parse("3段"), false,
+                1);
 
         // Assert
         assertEquals(affiliation, participant.getAffiliation());
@@ -173,9 +169,9 @@ class ParticipantTest {
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), affiliation, "名前", Rank.parse("3段"), false, 1)
-        );
+                IllegalArgumentException.class,
+                () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), affiliation, "名前",
+                        Rank.parse("3段"), false, 1));
         assertTrue(exception.getMessage().contains("100文字以内"));
     }
 
@@ -183,9 +179,9 @@ class ParticipantTest {
     void testConstructor_NormalParticipantWithNullRank() {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, "名前", null, false, 1)
-        );
+                IllegalArgumentException.class,
+                () -> new Participant(UUID.randomUUID(), UUID.randomUUID(), null, "名前", null, false,
+                        1));
         assertTrue(exception.getMessage().contains("通常参加者のrankは必須です"));
     }
 
@@ -194,8 +190,10 @@ class ParticipantTest {
         // Arrange
         UUID participantId = UUID.randomUUID();
         UUID groupId = UUID.randomUUID();
-        Participant p1 = new Participant(participantId, groupId, null, "名前", Rank.parse("3段"), false, 1);
-        Participant p2 = new Participant(participantId, groupId, null, "名前", Rank.parse("3段"), false, 1);
+        Participant p1 =
+                new Participant(participantId, groupId, null, "名前", Rank.parse("3段"), false, 1);
+        Participant p2 =
+                new Participant(participantId, groupId, null, "名前", Rank.parse("3段"), false, 1);
 
         // Assert
         assertEquals(p1, p2);
@@ -206,8 +204,10 @@ class ParticipantTest {
     void testEquals_DifferentParticipantId() {
         // Arrange
         UUID groupId = UUID.randomUUID();
-        Participant p1 = new Participant(UUID.randomUUID(), groupId, null, "名前", Rank.parse("3段"), false, 1);
-        Participant p2 = new Participant(UUID.randomUUID(), groupId, null, "名前", Rank.parse("3段"), false, 1);
+        Participant p1 =
+                new Participant(UUID.randomUUID(), groupId, null, "名前", Rank.parse("3段"), false, 1);
+        Participant p2 =
+                new Participant(UUID.randomUUID(), groupId, null, "名前", Rank.parse("3段"), false, 1);
 
         // Assert
         assertNotEquals(p1, p2);
@@ -217,8 +217,8 @@ class ParticipantTest {
     void testToString() {
         // Arrange
         Participant participant = new Participant(
-            UUID.randomUUID(), UUID.randomUUID(), "株式会社ABC", "山田太郎", Rank.parse("3段"), false, 1
-        );
+                UUID.randomUUID(), UUID.randomUUID(), "株式会社ABC", "山田太郎", Rank.parse("3段"), false,
+                1);
 
         // Assert
         String result = participant.toString();

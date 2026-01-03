@@ -44,7 +44,7 @@ class GroupTest {
         // Assert
         assertEquals(groupNumber, group.getGroupNumber(), "groupNumberが正しく設定されること");
         assertEquals("GROUP " + groupNumber, group.getDisplayName(),
-            "displayNameが'GROUP {groupNumber}'形式であること");
+                "displayNameが'GROUP {groupNumber}'形式であること");
     }
 
     @ParameterizedTest(name = "異常系: groupNumber={0}は範囲外")
@@ -56,12 +56,11 @@ class GroupTest {
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
-            IllegalArgumentException.class,
-            () -> new Group(groupId, tournamentId, groupNumber),
-            "groupNumberが範囲外でIllegalArgumentExceptionがスローされること"
-        );
+                IllegalArgumentException.class,
+                () -> new Group(groupId, tournamentId, groupNumber),
+                "groupNumberが範囲外でIllegalArgumentExceptionがスローされること");
         assertTrue(exception.getMessage().contains("1〜8"),
-            "エラーメッセージに範囲情報が含まれること");
+                "エラーメッセージに範囲情報が含まれること");
     }
 
     @Test
@@ -72,10 +71,9 @@ class GroupTest {
 
         // Act & Assert
         assertThrows(
-            NullPointerException.class,
-            () -> new Group(null, tournamentId, groupNumber),
-            "groupIdがnullでNullPointerExceptionがスローされること"
-        );
+                NullPointerException.class,
+                () -> new Group(null, tournamentId, groupNumber),
+                "groupIdがnullでNullPointerExceptionがスローされること");
     }
 
     @Test
@@ -86,10 +84,9 @@ class GroupTest {
 
         // Act & Assert
         assertThrows(
-            NullPointerException.class,
-            () -> new Group(groupId, null, groupNumber),
-            "tournamentIdがnullでNullPointerExceptionがスローされること"
-        );
+                NullPointerException.class,
+                () -> new Group(groupId, null, groupNumber),
+                "tournamentIdがnullでNullPointerExceptionがスローされること");
     }
 
     @Test

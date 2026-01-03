@@ -48,7 +48,7 @@ class DomainExceptionTest {
         // Assert
         assertEquals(cause, exception.getCause(), "causeが正しく設定されること");
         assertTrue(exception.getMessage().contains("IllegalStateException"),
-            "メッセージにcauseの情報が含まれること");
+                "メッセージにcauseの情報が含まれること");
     }
 
     @Test
@@ -58,14 +58,16 @@ class DomainExceptionTest {
 
         // Assert
         assertInstanceOf(RuntimeException.class, exception,
-            "DomainExceptionはRuntimeExceptionを継承していること");
+                "DomainExceptionはRuntimeExceptionを継承していること");
     }
 
     @Test
     void testThrow() {
         // Act & Assert
         assertThrows(DomainException.class,
-            () -> { throw new DomainException("エラー"); },
-            "DomainExceptionがスローされること");
+                () -> {
+                    throw new DomainException("エラー");
+                },
+                "DomainExceptionがスローされること");
     }
 }

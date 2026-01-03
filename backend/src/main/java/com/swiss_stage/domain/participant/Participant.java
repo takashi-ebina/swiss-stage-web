@@ -6,18 +6,17 @@ import java.util.UUID;
 /**
  * 参加者エンティティ
  * 
- * グループ内の参加者を表す。通常の参加者とダミーユーザーの2種類が存在する。
- * ダミーユーザーは参加者が奇数の場合に自動的に追加され、不戦勝として扱われる。
+ * グループ内の参加者を表す。通常の参加者とダミーユーザーの2種類が存在する。 ダミーユーザーは参加者が奇数の場合に自動的に追加され、不戦勝として扱われる。
  */
 public class Participant {
 
     private final UUID participantId;
     private final UUID groupId;
-    private final String affiliation;  // 所属（任意）
-    private final String name;         // 氏名（必須）
-    private final Rank rank;           // 段級位（通常参加者は必須、ダミーはnull）
-    private final boolean isDummy;     // ダミーユーザーフラグ
-    private final int registrationOrder;  // 登録順（同段級位時のソートに使用）
+    private final String affiliation; // 所属（任意）
+    private final String name; // 氏名（必須）
+    private final Rank rank; // 段級位（通常参加者は必須、ダミーはnull）
+    private final boolean isDummy; // ダミーユーザーフラグ
+    private final int registrationOrder; // 登録順（同段級位時のソートに使用）
 
     /**
      * コンストラクタ
@@ -33,17 +32,16 @@ public class Participant {
      * @throws IllegalArgumentException バリデーションエラーの場合
      */
     public Participant(
-        UUID participantId,
-        UUID groupId,
-        String affiliation,
-        String name,
-        Rank rank,
-        boolean isDummy,
-        int registrationOrder
-    ) {
+            UUID participantId,
+            UUID groupId,
+            String affiliation,
+            String name,
+            Rank rank,
+            boolean isDummy,
+            int registrationOrder) {
         this.participantId = Objects.requireNonNull(participantId, "participantIdは必須です");
         this.groupId = Objects.requireNonNull(groupId, "groupIdは必須です");
-        
+
         // nameバリデーション
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("nameは必須です");
@@ -52,19 +50,20 @@ public class Participant {
             throw new IllegalArgumentException("nameは50文字以内で入力してください: " + name.length() + "文字");
         }
         this.name = name;
-        
+
         // affiliationバリデーション
         if (affiliation != null && affiliation.length() > 100) {
-            throw new IllegalArgumentException("affiliationは100文字以内で入力してください: " + affiliation.length() + "文字");
+            throw new IllegalArgumentException(
+                    "affiliationは100文字以内で入力してください: " + affiliation.length() + "文字");
         }
         this.affiliation = affiliation;
-        
+
         // rankバリデーション（通常参加者は必須）
         if (!isDummy && rank == null) {
             throw new IllegalArgumentException("通常参加者のrankは必須です");
         }
         this.rank = rank;
-        
+
         this.isDummy = isDummy;
         this.registrationOrder = registrationOrder;
     }
@@ -134,11 +133,13 @@ public class Participant {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Participant that = (Participant) o;
         return Objects.equals(participantId, that.participantId) &&
-               Objects.equals(groupId, that.groupId);
+                Objects.equals(groupId, that.groupId);
     }
 
     @Override
@@ -149,13 +150,13 @@ public class Participant {
     @Override
     public String toString() {
         return "Participant{" +
-               "participantId=" + participantId +
-               ", groupId=" + groupId +
-               ", affiliation='" + affiliation + '\'' +
-               ", name='" + name + '\'' +
-               ", rank=" + rank +
-               ", isDummy=" + isDummy +
-               ", registrationOrder=" + registrationOrder +
-               '}';
+                "participantId=" + participantId +
+                ", groupId=" + groupId +
+                ", affiliation='" + affiliation + '\'' +
+                ", name='" + name + '\'' +
+                ", rank=" + rank +
+                ", isDummy=" + isDummy +
+                ", registrationOrder=" + registrationOrder +
+                '}';
     }
 }

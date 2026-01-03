@@ -6,9 +6,7 @@ import java.util.UUID;
 /**
  * グループエンティティ
  * 
- * トーナメント内の参加者を分割する論理的なグループを表す。
- * 1つのトーナメントには最大8グループまで作成でき、
- * 各グループには最大32名の参加者が所属できる。
+ * トーナメント内の参加者を分割する論理的なグループを表す。 1つのトーナメントには最大8グループまで作成でき、 各グループには最大32名の参加者が所属できる。
  */
 public class Group {
 
@@ -39,12 +37,12 @@ public class Group {
     public Group(UUID groupId, UUID tournamentId, int groupNumber) {
         this.groupId = Objects.requireNonNull(groupId, "groupIdは必須です");
         this.tournamentId = Objects.requireNonNull(tournamentId, "tournamentIdは必須です");
-        
+
         if (groupNumber < 1 || groupNumber > MAX_GROUPS) {
             throw new IllegalArgumentException(
-                "groupNumberは1〜" + MAX_GROUPS + "の範囲内である必要があります: " + groupNumber);
+                    "groupNumberは1〜" + MAX_GROUPS + "の範囲内である必要があります: " + groupNumber);
         }
-        
+
         this.groupNumber = groupNumber;
         this.displayName = "GROUP " + groupNumber;
     }
@@ -87,12 +85,14 @@ public class Group {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Group group = (Group) o;
         return groupNumber == group.groupNumber &&
-               Objects.equals(groupId, group.groupId) &&
-               Objects.equals(tournamentId, group.tournamentId);
+                Objects.equals(groupId, group.groupId) &&
+                Objects.equals(tournamentId, group.tournamentId);
     }
 
     @Override
@@ -103,10 +103,10 @@ public class Group {
     @Override
     public String toString() {
         return "Group{" +
-               "groupId=" + groupId +
-               ", tournamentId=" + tournamentId +
-               ", groupNumber=" + groupNumber +
-               ", displayName='" + displayName + '\'' +
-               '}';
+                "groupId=" + groupId +
+                ", tournamentId=" + tournamentId +
+                ", groupNumber=" + groupNumber +
+                ", displayName='" + displayName + '\'' +
+                '}';
     }
 }
