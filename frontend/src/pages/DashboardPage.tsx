@@ -34,6 +34,7 @@ const DashboardPage: React.FC = () => {
   }
 
   if (!user) {
+    console.log('User not authenticated, redirecting to login page.');
     window.location.href = '/login';
     return null;
   }
