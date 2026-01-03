@@ -33,14 +33,14 @@
 
 **目的**: プロジェクト初期化と基本構造の準備
 
-- [ ] T001 プロジェクト構造をplan.mdに基づいて作成（backend/frontend分離、DDDレイヤー構造）
-- [ ] T002 [P] バックエンド: Gradle 8.x + Java 21 + Spring Boot 3プロジェクトを初期化（backend/build.gradle）
-- [ ] T003 [P] フロントエンド: Vite + React 18 + TypeScript 5プロジェクトを初期化（frontend/package.json）
-- [ ] T004 [P] バックエンド依存関係追加: Spring Security OAuth2 Client, JJWT, AWS SDK DynamoDB（backend/build.gradle）
-- [ ] T005 [P] フロントエンド依存関係追加: Material-UI 5, React Router 6, Axios（frontend/package.json）
-- [ ] T006 [P] Lint設定: ESLint（フロントエンド）、Checkstyle（バックエンド）
-- [ ] T007 シークレット管理セットアップ: backend/.env.example作成、.gitignoreに.envを追加
-- [ ] T008 [P] Logback設定: logback-spring.xml作成（JSON形式出力、CloudWatch Logs統合）
+- [X] T001 プロジェクト構造をplan.mdに基づいて作成（backend/frontend分離、DDDレイヤー構造）
+- [X] T002 [P] バックエンド: Gradle 8.x + Java 21 + Spring Boot 3プロジェクトを初期化（backend/build.gradle）
+- [X] T003 [P] フロントエンド: Vite + React 18 + TypeScript 5プロジェクトを初期化（frontend/package.json）
+- [X] T004 [P] バックエンド依存関係追加: Spring Security OAuth2 Client, JJWT, AWS SDK DynamoDB（backend/build.gradle + .env.local対応）
+- [X] T005 [P] フロントエンド依存関係追加: Material-UI 5, React Router 6, Axios（frontend/package.json + @mui/icons-material）
+- [X] T006 [P] Lint設定: ESLint（フロントエンド）、Checkstyle（バックエンド）
+- [X] T007 シークレット管理セットアップ: backend/.env.example作成、.gitignoreに.envを追加
+- [X] T008 [P] Logback設定: logback-spring.xml作成（JSON形式出力、CloudWatch Logs統合）
 
 ---
 
@@ -50,13 +50,13 @@
 
 **🚨 CRITICAL**: このフェーズ完了まで、ユーザーストーリー実装は禁止
 
-- [ ] T009 DynamoDBテーブル作成: swiss_stage_table（PK/SK、オンデマンドモード、ポイントインタイムリカバリ有効化）
-- [ ] T010 [P] Spring Security基本設定: SecurityConfig.java作成（CSRF保護、HTTPS設定）
-- [ ] T011 [P] 個人情報マスキングユーティリティ作成: backend/src/main/java/com/swiss_stage/common/util/LoggingUtil.java（maskEmail, maskName関数）
-- [ ] T012 [P] 共通例外クラス作成: backend/src/main/java/com/swiss_stage/common/exception/（UnauthorizedException, BusinessException）
-- [ ] T013 [P] 共通DTOクラス作成: backend/src/main/java/com/swiss_stage/common/dto/ErrorResponse.java
-- [ ] T014 [P] CORS設定: SecurityConfig.javaにCORS設定追加（http://localhost:3000を許可）
-- [ ] T015 [P] 環境変数読み込み設定: application.yml, application-local.yml, application-prod.yml作成
+- [X] T009 DynamoDBテーブル作成: swiss_stage_table（PK/SK、オンデマンドモード、ポイントインタイムリカバリ有効化） ※SETUP.mdに手順記載
+- [X] T010 [P] Spring Security基本設定: SecurityConfig.java作成（CSRF保護、HTTPS設定）
+- [X] T011 [P] 個人情報マスキングユーティリティ作成: backend/src/main/java/com/swiss_stage/common/util/LoggingUtil.java（maskEmail, maskName関数）
+- [X] T012 [P] 共通例外クラス作成: backend/src/main/java/com/swiss_stage/common/exception/（UnauthorizedException, BusinessException）
+- [X] T013 [P] 共通DTOクラス作成: backend/src/main/java/com/swiss_stage/common/dto/ErrorResponse.java
+- [X] T014 [P] CORS設定: SecurityConfig.javaにCORS設定追加（http://localhost:3000を許可）
+- [X] T015 [P] 環境変数読み込み設定: application.yml, application-local.yml, application-prod.yml作成
 
 **チェックポイント**: ✅ 基盤準備完了 → ユーザーストーリー実装を並行開始可能
 
@@ -123,8 +123,8 @@
 
 #### ログ・監視
 
-- [ ] T044 [P] [US1] ログ追加（バックエンド）: OAuth2AuthenticationSuccessHandler、UserService、JwtServiceにuserIdのみ記録（個人情報マスキング適用）
-- [ ] T045 [P] [US1] ログ追加（フロントエンド）: authService.tsにconsole.info（userId記録、email/displayNameは出力しない）
+- [X] T044 [P] [US1] ログ追加（バックエンド）: OAuth2AuthenticationSuccessHandler、UserService、JwtServiceにuserIdのみ記録（個人情報マスキング適用）
+- [X] T045 [P] [US1] ログ追加（フロントエンド）: authService.tsにconsole.info（userId記録、email/displayNameは出力しない）
 
 **チェックポイント**: ✅ ユーザーストーリー1は**単体で完全に動作しテスト可能**
 
@@ -160,10 +160,10 @@
 
 ### ユーザーストーリー 3 のテスト【TDD厳守】⚠️
 
-- [ ] T052 [P] [US3] アプリケーション層単体テスト: backend/src/test/java/com/swiss_stage/unit/application/UserServiceTest.java（deleteAccount: 正常系、進行中トーナメント存在時エラー）
-- [ ] T053 [P] [US3] プレゼンテーション層単体テスト: backend/src/test/java/com/swiss_stage/unit/presentation/UserControllerTest.java（DELETE /api/users/{userId}: 正常系、メール不一致、進行中トーナメント存在）
-- [ ] T054 [US3] アカウント削除E2Eテスト: frontend/tests/e2e/delete-account.spec.ts（Playwright: アカウント設定 → メールアドレス再入力 → 削除確認 → ログイン画面リダイレクト）
-- [ ] T055 [P] [US3] 進行中トーナメント存在時エラーE2Eテスト: frontend/tests/e2e/delete-account-error.spec.ts（Playwright: 進行中トーナメント存在 → エラーメッセージ表示）
+- [X] T052 [P] [US3] アプリケーション層単体テスト: backend/src/test/java/com/swiss_stage/unit/application/UserServiceTest.java（deleteAccount: 正常系、進行中トーナメント存在時エラー）
+- [X] T053 [P] [US3] プレゼンテーション層単体テスト: backend/src/test/java/com/swiss_stage/unit/presentation/UserControllerTest.java（DELETE /api/users/{userId}: 正常系、メール不一致、進行中トーナメント存在）
+- [X] T054 [US3] アカウント削除E2Eテスト: frontend/tests/e2e/delete-account.spec.ts（Playwright: アカウント設定 → メールアドレス再入力 → 削除確認 → ログイン画面リダイレクト）
+- [X] T055 [P] [US3] 進行中トーナメント存在時エラーE2Eテスト: frontend/tests/e2e/delete-account-error.spec.ts（Playwright: 進行中トーナメント存在 → エラーメッセージ表示）
 
 ### ユーザーストーリー 3 の実装
 
