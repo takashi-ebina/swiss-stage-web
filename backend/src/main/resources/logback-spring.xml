@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="swiss-stage"/>
+    
+    <!-- Console Appender with JSON format -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeContext>true</includeContext>
+            <includeMdc>true</includeMdc>
+            <includeTags>true</includeTags>
+            <includeCallerData>false</includeCallerData>
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <version>version</version>
+                <message>message</message>
+                <logger>logger</logger>
+                <thread>thread</thread>
+                <level>level</level>
+                <levelValue>levelValue</levelValue>
+            </fieldNames>
+            <customFields>{"application":"${appName}"}</customFields>
+        </encoder>
+    </appender>
+    
+    <!-- CloudWatch Logs Appender (for production) -->
+    <!-- Note: Configure AWS CloudWatch Logs in production environment -->
+    
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+    
+    <!-- Application-specific logging -->
+    <logger name="com.swiss_stage" level="DEBUG"/>
+    
+    <!-- Spring Framework logging -->
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.springframework.security" level="INFO"/>
+    
+    <!-- AWS SDK logging -->
+    <logger name="software.amazon.awssdk" level="WARN"/>
+    
+</configuration>

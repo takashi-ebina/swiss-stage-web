@@ -1,0 +1,228 @@
+openapi: 3.0.3
+info:
+  title: Swiss Stage Web - ユーザー/アカウントAPI
+  description: ユーザー管理とアカウント削除のREST APIエンドポイント定義
+  version: 1.0.0
+  contact:
+    name: Swiss Stage Web Team
+
+servers:
+  - url: http://localhost:8080/api
+    description: ローカル開発環境
+  - url: https://your-domain.com/api
+    description: 本番環境
+
+tags:
+  - name: Users
+    description: ユーザー管理エンドポイント
+
+paths:
+  /users/{userId}:
+    get:
+      summary: ユーザー情報取得
+      description: 指定されたユーザーIDのユーザー情報を取得します
+      operationId: getUserById
+      tags:
+        - Users
+      security:
+        - CookieAuth: []
+      parameters:
+        - name: userId
+          in: path
+          description: ユーザーID（UUID）
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 550e8400-e29b-41d4-a716-446655440000
+      responses:
+        '200':
+          description: ユーザー情報取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: 未認証
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: 権限不足（他ユーザーの情報にアクセス）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: ユーザーが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: アカウント削除
+      description: |
+        現在ログイン中のユーザーのアカウントと全トーナメントデータを完全に削除します。
+        
+        **削除前チェック**:
+        - 進行中のトーナメントが存在する場合、削除は拒否されます
+        
+        **削除範囲**:
+        - ユーザー情報（DynamoDB）
+        - 全トーナメントデータ（参加者、対戦結果、ランキング含む）
+        
+        **注意**: 削除は即座に実行され、復元できません
+      operationId: deleteAccount
+      tags:
+        - Users
+      security:
+        - CookieAuth: []
+      parameters:
+        - name: userId
+          in: path
+          description: ユーザーID（UUID）。ログイン中のユーザーのuserIdと一致する必要があります
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 550e8400-e29b-41d4-a716-446655440000
+      requestBody:
+        description: アカウント削除確認情報
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteAccountRequest'
+      responses:
+        '200':
+          description: アカウント削除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: アカウントを削除しました
+                  redirectUrl:
+                    type: string
+                    description: リダイレクト先URL（ログイン画面）
+                    example: /login
+                example:
+                  message: アカウントを削除しました
+                  redirectUrl: /login
+          headers:
+            Set-Cookie:
+              description: JWT_TOKENを削除するCookie
+              schema:
+                type: string
+                example: JWT_TOKEN=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/
+        '400':
+          description: 不正なリクエスト（メールアドレス不一致、必須項目不足）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                EmailMismatch:
+                  value:
+                    error: EMAIL_MISMATCH
+                    message: メールアドレスが一致しません
+                ActiveTournamentExists:
+                  value:
+                    error: ACTIVE_TOURNAMENT_EXISTS
+                    message: 進行中のトーナメントがあるため削除できません。トーナメントを完了または削除してから再度お試しください
+        '401':
+          description: 未認証
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: 権限不足（他ユーザーのアカウント削除試行）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: JWT_TOKEN
+      description: HTTP-only Cookieに保存されたJWTトークン
+
+  schemas:
+    UserResponse:
+      type: object
+      description: ユーザー情報レスポンス
+      required:
+        - userId
+        - displayName
+        - createdAt
+        - lastLoginAt
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: ユーザーの一意識別子
+          example: 550e8400-e29b-41d4-a716-446655440000
+        displayName:
+          type: string
+          description: Googleアカウントの表示名
+          minLength: 1
+          maxLength: 100
+          example: 山田太郎
+        createdAt:
+          type: string
+          format: date-time
+          description: アカウント作成日時（ISO 8601形式）
+          example: 2025-12-31T00:00:00Z
+        lastLoginAt:
+          type: string
+          format: date-time
+          description: 最終ログイン日時（ISO 8601形式）
+          example: 2025-12-31T12:30:00Z
+
+    DeleteAccountRequest:
+      type: object
+      description: アカウント削除リクエスト
+      required:
+        - email
+        - confirmation
+      properties:
+        email:
+          type: string
+          format: email
+          description: ログイン中のユーザーのメールアドレス（本人確認用）
+          example: yamada@example.com
+        confirmation:
+          type: boolean
+          description: 削除確認（trueのみ受付）
+          example: true
+      example:
+        email: yamada@example.com
+        confirmation: true
+
+    ErrorResponse:
+      type: object
+      description: エラーレスポンス
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: エラーコード
+          example: EMAIL_MISMATCH
+        message:
+          type: string
+          description: ユーザーフレンドリーなエラーメッセージ（日本語）
+          example: メールアドレスが一致しません
+        details:
+          type: string
+          description: 詳細なエラー情報（開発環境のみ表示）
+          example: Provided email does not match authenticated user

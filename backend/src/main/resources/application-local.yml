@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+aws:
+  dynamodb:
+    endpoint: http://localhost:8000
+
+logging:
+  level:
+    com.swiss_stage: DEBUG
+    org.springframework.security: DEBUG
