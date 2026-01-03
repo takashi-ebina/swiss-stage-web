@@ -204,11 +204,11 @@
 - `backend/src/test/java/com/swiss_stage/unit/infrastructure/dynamodb/DynamoDBGroupRepositoryTest.java`
 
 **受け入れ条件**:
-- [ ] `findById(UUID groupId)`を実装
-- [ ] `findByTournamentId(UUID tournamentId)`を実装
-- [ ] `save(Group group)`を実装
-- [ ] `delete(UUID groupId)`を実装
-- [ ] 単体テストでDynamoDB操作をモック化して検証
+- [x] `findByTournamentIdAndGroupNumber(UUID tournamentId, int groupNumber)`を実装
+- [x] `findByTournamentId(UUID tournamentId)`を実装
+- [x] `save(Group group)`を実装
+- [x] `delete(UUID tournamentId, int groupNumber)`を実装
+- [x] 単体テストでDynamoDB操作をモック化して検証
 
 **依存**: Task 1.2 (Group), Task 2.2 (GroupEntity)
 
