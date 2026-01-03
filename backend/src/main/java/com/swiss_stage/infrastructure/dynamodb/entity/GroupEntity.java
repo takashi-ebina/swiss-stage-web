@@ -28,10 +28,10 @@ public class GroupEntity {
      */
     public static GroupEntity fromDomain(Group group) {
         GroupEntity entity = new GroupEntity();
-        entity.setGroupId(group.getGroupId().toString());
-        entity.setTournamentId(group.getTournamentId().toString());
-        entity.setGroupNumber(group.getGroupNumber());
-        entity.setDisplayName(group.getDisplayName());
+        entity.setGroupId(group.groupId().toString());
+        entity.setTournamentId(group.tournamentId().toString());
+        entity.setGroupNumber(group.groupNumber());
+        entity.setDisplayName(group.displayName());
         return entity;
     }
 

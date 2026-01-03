@@ -224,10 +224,10 @@
 - `backend/src/test/java/com/swiss_stage/unit/infrastructure/dynamodb/DynamoDBGroupParticipantListRepositoryTest.java`
 
 **受け入れ条件**:
-- [ ] `findByGroupId(UUID groupId)`を実装（GSIクエリ使用）
-- [ ] `save(GroupParticipantList list)`を実装（集約全体を永続化）
-- [ ] `findParticipantsSortedByRank(UUID groupId)`でGSIクエリを実装
-- [ ] 単体テストでDynamoDB操作をモック化して検証
+- [x] `findByGroupId(UUID groupId)`を実装（GSIクエリ使用）
+- [x] `save(GroupParticipantList list)`を実装（集約全体を永続化）
+- [x] `findParticipantsSortedByRank(UUID groupId)`でGSIクエリを実装
+- [x] 単体テストでDynamoDB操作をモック化して検証
 
 **依存**: Task 1.4 (GroupParticipantList), Task 2.2 (ParticipantEntity)
 

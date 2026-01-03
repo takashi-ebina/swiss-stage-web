@@ -66,7 +66,7 @@ class RankTest {
     @NullAndEmptySource
     void testParse_NullOrEmpty(String input) {
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(
+        assertThrows(
                 IllegalArgumentException.class,
                 () -> Rank.parse(input),
                 "nullまたは空文字でIllegalArgumentExceptionがスローされること");

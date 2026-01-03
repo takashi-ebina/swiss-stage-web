@@ -55,11 +55,10 @@ public class DynamoDBGroupParticipantListRepository implements GroupParticipantL
             return Optional.empty();
         }
 
-        // GroupParticipantListを再構築
-        // Note: Groupの情報はParticipantから取得できないため、
-        // 実際の実装ではGroupRepositoryから取得する必要がある
-        // ここでは簡易実装として、最初のParticipantのgroupIdを使用
-        UUID firstGroupId = participants.get(0).getGroupId();
+        // FIXME: Groupの情報はParticipantから取得できないため、
+        // GroupRepositoryから取得する必要がある。
+        // 現在は簡易実装として新しいGroupインスタンスを生成している。
+        UUID firstGroupId = participants.get(0).groupId();
 
         // 簡易実装: Groupを仮作成（実際にはGroupRepositoryから取得すべき）
         Group group = new Group(UUID.randomUUID(), UUID.randomUUID(), 1);
@@ -67,8 +66,8 @@ public class DynamoDBGroupParticipantListRepository implements GroupParticipantL
 
         // 参加者を追加（registrationOrder順にソート）
         participants.stream()
-                .sorted((p1, p2) -> Integer.compare(p1.getRegistrationOrder(),
-                        p2.getRegistrationOrder()))
+                .sorted((p1, p2) -> Integer.compare(p1.registrationOrder(),
+                        p2.registrationOrder()))
                 .forEach(list::addParticipant);
 
         return Optional.of(list);
@@ -96,7 +95,7 @@ public class DynamoDBGroupParticipantListRepository implements GroupParticipantL
     @Override
     public GroupParticipantList save(GroupParticipantList list) {
         // 既存の参加者を全削除
-        deleteAllByGroupId(list.getGroup().getGroupId());
+        deleteAllByGroupId(list.getGroup().groupId());
 
         // 新規参加者を全追加
         for (Participant participant : list.getParticipants()) {
@@ -123,7 +122,7 @@ public class DynamoDBGroupParticipantListRepository implements GroupParticipantL
                 .stream()
                 .flatMap(page -> page.items().stream())
                 .collect(Collectors.toList());
-        
+
         for (ParticipantEntity entity : entities) {
             Key key = Key.builder()
                     .partitionValue(entity.getGroupId())

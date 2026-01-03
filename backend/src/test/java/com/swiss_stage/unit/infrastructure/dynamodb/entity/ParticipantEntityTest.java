@@ -52,7 +52,7 @@ class ParticipantEntityTest {
                 groupId,
                 null,
                 "ダミーユーザー（不戦勝）",
-                null,
+                Rank.parse("20級"),
                 true,
                 10);
 
@@ -64,8 +64,8 @@ class ParticipantEntityTest {
         assertEquals(groupId.toString(), entity.getGroupId());
         assertNull(entity.getAffiliation());
         assertEquals("ダミーユーザー（不戦勝）", entity.getName());
-        assertNull(entity.getRankLevel());
-        assertNull(entity.getRankDisplayName());
+        assertEquals(-20, entity.getRankLevel());
+        assertEquals("20級", entity.getRankDisplayName());
         assertTrue(entity.getIsDummy());
         assertEquals(10, entity.getRegistrationOrder());
     }
@@ -89,13 +89,13 @@ class ParticipantEntityTest {
         Participant participant = entity.toDomain();
 
         // Assert
-        assertEquals(participantId, participant.getParticipantId());
-        assertEquals(groupId, participant.getGroupId());
-        assertEquals("株式会社XYZ", participant.getAffiliation());
-        assertEquals("鈴木次郎", participant.getName());
-        assertEquals(Rank.parse("5段"), participant.getRank());
+        assertEquals(participantId, participant.participantId());
+        assertEquals(groupId, participant.groupId());
+        assertEquals("株式会社XYZ", participant.affiliation());
+        assertEquals("鈴木次郎", participant.name());
+        assertEquals(Rank.parse("5段"), participant.rank());
         assertFalse(participant.isDummy());
-        assertEquals(2, participant.getRegistrationOrder());
+        assertEquals(2, participant.registrationOrder());
     }
 
     @Test
@@ -107,6 +107,8 @@ class ParticipantEntityTest {
         entity.setParticipantId(participantId.toString());
         entity.setGroupId(groupId.toString());
         entity.setName("ダミーユーザー（不戦勝）");
+        entity.setRankLevel(-20);
+        entity.setRankDisplayName("20級");
         entity.setIsDummy(true);
         entity.setRegistrationOrder(5);
 
@@ -114,13 +116,13 @@ class ParticipantEntityTest {
         Participant participant = entity.toDomain();
 
         // Assert
-        assertEquals(participantId, participant.getParticipantId());
-        assertEquals(groupId, participant.getGroupId());
-        assertNull(participant.getAffiliation());
-        assertEquals("ダミーユーザー（不戦勝）", participant.getName());
-        assertNull(participant.getRank());
+        assertEquals(participantId, participant.participantId());
+        assertEquals(groupId, participant.groupId());
+        assertNull(participant.affiliation());
+        assertEquals("ダミーユーザー（不戦勝）", participant.name());
+        assertEquals(Rank.parse("20級"), participant.rank());
         assertTrue(participant.isDummy());
-        assertEquals(5, participant.getRegistrationOrder());
+        assertEquals(5, participant.registrationOrder());
     }
 
     @Test
@@ -142,13 +144,13 @@ class ParticipantEntityTest {
         Participant converted = entity.toDomain();
 
         // Assert
-        assertEquals(original.getParticipantId(), converted.getParticipantId());
-        assertEquals(original.getGroupId(), converted.getGroupId());
-        assertEquals(original.getAffiliation(), converted.getAffiliation());
-        assertEquals(original.getName(), converted.getName());
-        assertEquals(original.getRank(), converted.getRank());
+        assertEquals(original.participantId(), converted.participantId());
+        assertEquals(original.groupId(), converted.groupId());
+        assertEquals(original.affiliation(), converted.affiliation());
+        assertEquals(original.name(), converted.name());
+        assertEquals(original.rank(), converted.rank());
         assertEquals(original.isDummy(), converted.isDummy());
-        assertEquals(original.getRegistrationOrder(), converted.getRegistrationOrder());
+        assertEquals(original.registrationOrder(), converted.registrationOrder());
     }
 
     @Test
@@ -172,6 +174,6 @@ class ParticipantEntityTest {
         // Assert
         assertEquals(-5, entity.getRankLevel(), "5級はlevel=-5");
         assertEquals("5級", entity.getRankDisplayName());
-        assertEquals(original.getRank(), converted.getRank());
+        assertEquals(original.rank(), converted.rank());
     }
 }

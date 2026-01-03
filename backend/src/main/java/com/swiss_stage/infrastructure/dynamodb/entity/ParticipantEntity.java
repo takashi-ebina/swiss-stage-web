@@ -30,22 +30,17 @@ public class ParticipantEntity {
      */
     public static ParticipantEntity fromDomain(Participant participant) {
         ParticipantEntity entity = new ParticipantEntity();
-        entity.setParticipantId(participant.getParticipantId().toString());
-        entity.setGroupId(participant.getGroupId().toString());
-        entity.setAffiliation(participant.getAffiliation());
-        entity.setName(participant.getName());
+        entity.setParticipantId(participant.participantId().toString());
+        entity.setGroupId(participant.groupId().toString());
+        entity.setAffiliation(participant.affiliation());
+        entity.setName(participant.name());
 
-        // Rankの変換: ダミーユーザーはnull
-        if (participant.getRank() != null) {
-            entity.setRankLevel(participant.getRank().level());
-            entity.setRankDisplayName(participant.getRank().displayName());
-        } else {
-            entity.setRankLevel(null);
-            entity.setRankDisplayName(null);
-        }
+        // Rankの変換
+        entity.setRankLevel(participant.rank().level());
+        entity.setRankDisplayName(participant.rank().displayName());
 
         entity.setIsDummy(participant.isDummy());
-        entity.setRegistrationOrder(participant.getRegistrationOrder());
+        entity.setRegistrationOrder(participant.registrationOrder());
 
         return entity;
     }

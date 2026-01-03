@@ -51,7 +51,7 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        Participant participant = createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1);
+        Participant participant = createTestParticipant(group.groupId(), "山田太郎", "3段", 1);
 
         // Act
         list.addParticipant(participant);
@@ -68,10 +68,10 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        list.addParticipant(createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1));
+        list.addParticipant(createTestParticipant(group.groupId(), "山田太郎", "3段", 1));
 
         // Act
-        list.addParticipant(createTestParticipant(group.getGroupId(), "鈴木次郎", "5段", 2));
+        list.addParticipant(createTestParticipant(group.groupId(), "鈴木次郎", "5段", 2));
 
         // Assert
         assertEquals(2, list.getParticipantCount(), "2名追加後、ダミーが削除されて2名");
@@ -89,7 +89,7 @@ class GroupParticipantListTest {
 
         // 32名追加
         for (int i = 1; i <= 32; i++) {
-            list.addParticipant(createTestParticipant(group.getGroupId(), "参加者" + i, "3段", i));
+            list.addParticipant(createTestParticipant(group.groupId(), "参加者" + i, "3段", i));
         }
 
         // Assert
@@ -104,14 +104,14 @@ class GroupParticipantListTest {
 
         // 32名追加
         for (int i = 1; i <= 32; i++) {
-            list.addParticipant(createTestParticipant(group.getGroupId(), "参加者" + i, "3段", i));
+            list.addParticipant(createTestParticipant(group.groupId(), "参加者" + i, "3段", i));
         }
 
         // Act & Assert
         DomainException exception = assertThrows(
                 DomainException.class,
                 () -> list.addParticipant(
-                        createTestParticipant(group.getGroupId(), "参加者33", "3段", 33)),
+                        createTestParticipant(group.groupId(), "参加者33", "3段", 33)),
                 "33名目の追加でDomainExceptionがスローされること");
         assertTrue(exception.getMessage().contains("32名"), "エラーメッセージに上限情報が含まれること");
     }
@@ -121,13 +121,13 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        Participant p1 = createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1);
-        Participant p2 = createTestParticipant(group.getGroupId(), "鈴木次郎", "5段", 2);
+        Participant p1 = createTestParticipant(group.groupId(), "山田太郎", "3段", 1);
+        Participant p2 = createTestParticipant(group.groupId(), "鈴木次郎", "5段", 2);
         list.addParticipant(p1);
         list.addParticipant(p2);
 
         // Act
-        list.removeParticipant(p1.getParticipantId());
+        list.removeParticipant(p1.participantId());
 
         // Assert
         assertEquals(2, list.getParticipantCount(), "1名削除後、ダミーが追加されて2名");
@@ -142,15 +142,15 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        Participant p1 = createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1);
-        Participant p2 = createTestParticipant(group.getGroupId(), "鈴木次郎", "5段", 2);
-        Participant p3 = createTestParticipant(group.getGroupId(), "佐藤三郎", "4段", 3);
+        Participant p1 = createTestParticipant(group.groupId(), "山田太郎", "3段", 1);
+        Participant p2 = createTestParticipant(group.groupId(), "鈴木次郎", "5段", 2);
+        Participant p3 = createTestParticipant(group.groupId(), "佐藤三郎", "4段", 3);
         list.addParticipant(p1);
         list.addParticipant(p2);
         list.addParticipant(p3);
 
         // Act
-        list.removeParticipant(p1.getParticipantId());
+        list.removeParticipant(p1.participantId());
 
         // Assert
         assertEquals(2, list.getParticipantCount(), "1名削除後、ダミーが削除されて2名");
@@ -165,19 +165,19 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        list.addParticipant(createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "鈴木次郎", "5段", 2));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "佐藤三郎", "初段", 3));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "田中四郎", "2級", 4));
+        list.addParticipant(createTestParticipant(group.groupId(), "山田太郎", "3段", 1));
+        list.addParticipant(createTestParticipant(group.groupId(), "鈴木次郎", "5段", 2));
+        list.addParticipant(createTestParticipant(group.groupId(), "佐藤三郎", "初段", 3));
+        list.addParticipant(createTestParticipant(group.groupId(), "田中四郎", "2級", 4));
 
         // Act
         List<Participant> sorted = list.getSortedParticipants();
 
         // Assert
-        assertEquals("鈴木次郎", sorted.get(0).getName(), "1位は5段");
-        assertEquals("山田太郎", sorted.get(1).getName(), "2位は3段");
-        assertEquals("佐藤三郎", sorted.get(2).getName(), "3位は初段");
-        assertEquals("田中四郎", sorted.get(3).getName(), "4位は2級");
+        assertEquals("鈴木次郎", sorted.get(0).name(), "1位は5段");
+        assertEquals("山田太郎", sorted.get(1).name(), "2位は3段");
+        assertEquals("佐藤三郎", sorted.get(2).name(), "3位は初段");
+        assertEquals("田中四郎", sorted.get(3).name(), "4位は2級");
     }
 
     @Test
@@ -185,17 +185,17 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        list.addParticipant(createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "鈴木次郎", "3段", 2));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "佐藤三郎", "3段", 3));
+        list.addParticipant(createTestParticipant(group.groupId(), "山田太郎", "3段", 1));
+        list.addParticipant(createTestParticipant(group.groupId(), "鈴木次郎", "3段", 2));
+        list.addParticipant(createTestParticipant(group.groupId(), "佐藤三郎", "3段", 3));
 
         // Act
         List<Participant> sorted = list.getSortedParticipants();
 
         // Assert
-        assertEquals("山田太郎", sorted.get(0).getName(), "同段級位は登録順（山田が先）");
-        assertEquals("鈴木次郎", sorted.get(1).getName(), "同段級位は登録順（鈴木が次）");
-        assertEquals("佐藤三郎", sorted.get(2).getName(), "同段級位は登録順（佐藤が最後）");
+        assertEquals("山田太郎", sorted.get(0).name(), "同段級位は登録順（山田が先）");
+        assertEquals("鈴木次郎", sorted.get(1).name(), "同段級位は登録順（鈴木が次）");
+        assertEquals("佐藤三郎", sorted.get(2).name(), "同段級位は登録順（佐藤が最後）");
     }
 
     @Test
@@ -203,9 +203,9 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        list.addParticipant(createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "鈴木次郎", "5段", 2));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "佐藤三郎", "初段", 3));
+        list.addParticipant(createTestParticipant(group.groupId(), "山田太郎", "3段", 1));
+        list.addParticipant(createTestParticipant(group.groupId(), "鈴木次郎", "5段", 2));
+        list.addParticipant(createTestParticipant(group.groupId(), "佐藤三郎", "初段", 3));
 
         // Act
         List<Participant> sorted = list.getSortedParticipants();
@@ -220,9 +220,9 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        list.addParticipant(createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "鈴木次郎", "5段", 2));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "佐藤三郎", "初段", 3));
+        list.addParticipant(createTestParticipant(group.groupId(), "山田太郎", "3段", 1));
+        list.addParticipant(createTestParticipant(group.groupId(), "鈴木次郎", "5段", 2));
+        list.addParticipant(createTestParticipant(group.groupId(), "佐藤三郎", "初段", 3));
 
         // Act
         List<Participant> exported = list.exportToCsv();
@@ -247,7 +247,7 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        list.addParticipant(createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1));
+        list.addParticipant(createTestParticipant(group.groupId(), "山田太郎", "3段", 1));
 
         // Assert
         assertEquals(2, list.getParticipantCount(), "1名の場合はダミーが追加されて2名");
@@ -259,7 +259,7 @@ class GroupParticipantListTest {
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
         for (int i = 1; i <= 30; i++) {
-            list.addParticipant(createTestParticipant(group.getGroupId(), "参加者" + i, "3段", i));
+            list.addParticipant(createTestParticipant(group.groupId(), "参加者" + i, "3段", i));
         }
 
         // Assert
@@ -272,9 +272,9 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        list.addParticipant(createTestParticipant(group.getGroupId(), "山田太郎", "3段", 1));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "鈴木次郎", "5段", 2));
-        list.addParticipant(createTestParticipant(group.getGroupId(), "佐藤三郎", "初段", 3));
+        list.addParticipant(createTestParticipant(group.groupId(), "山田太郎", "3段", 1));
+        list.addParticipant(createTestParticipant(group.groupId(), "鈴木次郎", "5段", 2));
+        list.addParticipant(createTestParticipant(group.groupId(), "佐藤三郎", "初段", 3));
 
         // Assert
         assertEquals(3, list.getRealParticipantCount(), "実参加者は3名");

@@ -19,7 +19,6 @@ import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,6 +28,7 @@ import static org.mockito.Mockito.*;
  * DynamoDBGroupParticipantListRepositoryの単体テスト DynamoDBクライアントをモック化して動作を検証
  */
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings({"unchecked", "deprecation"})
 class DynamoDBGroupParticipantListRepositoryTest {
 
     @Mock
@@ -54,7 +54,6 @@ class DynamoDBGroupParticipantListRepositoryTest {
     void testFindByGroupId_Found() {
         // Arrange
         UUID groupId = UUID.randomUUID();
-        UUID tournamentId = UUID.randomUUID();
 
         ParticipantEntity entity1 = createParticipantEntity(groupId, "参加者1", "3段", 1);
         ParticipantEntity entity2 = createParticipantEntity(groupId, "参加者2", "初段", 2);
@@ -72,8 +71,8 @@ class DynamoDBGroupParticipantListRepositoryTest {
         // Note: GroupはDynamoDBから復元できないため、簡易実装で新しいGroupIdが生成される
         // ここではparticipantsの内容を検証
         assertEquals(2, list.getParticipants().size());
-        assertEquals("参加者1", list.getParticipants().get(0).getName());
-        assertEquals("参加者2", list.getParticipants().get(1).getName());
+        assertEquals("参加者1", list.getParticipants().get(0).name());
+        assertEquals("参加者2", list.getParticipants().get(1).name());
     }
 
     @Test
@@ -95,9 +94,9 @@ class DynamoDBGroupParticipantListRepositoryTest {
 
         // Assert
         assertEquals(3, result.size());
-        assertEquals("5段", result.get(0).getRank().displayName());
-        assertEquals("3段", result.get(1).getRank().displayName());
-        assertEquals("初段", result.get(2).getRank().displayName());
+        assertEquals("5段", result.get(0).rank().displayName());
+        assertEquals("3段", result.get(1).rank().displayName());
+        assertEquals("初段", result.get(2).rank().displayName());
     }
 
     @Test
@@ -115,14 +114,14 @@ class DynamoDBGroupParticipantListRepositoryTest {
         // deleteAllByGroupIdのモック（空のページを返す）
         Page<ParticipantEntity> emptyPage = Page.create(Collections.emptyList());
         when(participantTable.query(any(QueryEnhancedRequest.class)))
-            .thenReturn(() -> Collections.singletonList(emptyPage).iterator());
+                .thenReturn(() -> Collections.singletonList(emptyPage).iterator());
 
         // Act
         GroupParticipantList result = repository.save(list);
 
         // Assert
         assertNotNull(result);
-        assertEquals(group.getGroupId(), result.getGroup().getGroupId());
+        assertEquals(group.groupId(), result.getGroup().groupId());
         verify(participantTable, atLeastOnce()).putItem(any(ParticipantEntity.class));
     }
 

@@ -24,6 +24,7 @@ import static org.mockito.Mockito.*;
  * DynamoDBGroupRepositoryの単体テスト DynamoDBクライアントをモック化して動作を検証
  */
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("unchecked")
 class DynamoDBGroupRepositoryTest {
 
     @Mock
@@ -58,8 +59,8 @@ class DynamoDBGroupRepositoryTest {
 
         // Assert
         assertTrue(result.isPresent());
-        assertEquals(groupId, result.get().getGroupId());
-        assertEquals(1, result.get().getGroupNumber());
+        assertEquals(groupId, result.get().groupId());
+        assertEquals(1, result.get().groupNumber());
     }
 
     @Test
@@ -89,8 +90,8 @@ class DynamoDBGroupRepositoryTest {
 
         // Assert
         assertNotNull(result);
-        assertEquals(groupId, result.getGroupId());
-        assertEquals(3, result.getGroupNumber());
+        assertEquals(groupId, result.groupId());
+        assertEquals(3, result.groupNumber());
         verify(groupTable, times(1)).putItem(any(GroupEntity.class));
     }
 

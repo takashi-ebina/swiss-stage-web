@@ -45,10 +45,10 @@ class GroupEntityTest {
         Group group = entity.toDomain();
 
         // Assert
-        assertEquals(groupId, group.getGroupId());
-        assertEquals(tournamentId, group.getTournamentId());
-        assertEquals(5, group.getGroupNumber());
-        assertEquals("GROUP 5", group.getDisplayName());
+        assertEquals(groupId, group.groupId());
+        assertEquals(tournamentId, group.tournamentId());
+        assertEquals(5, group.groupNumber());
+        assertEquals("GROUP 5", group.displayName());
     }
 
     @Test
@@ -63,10 +63,10 @@ class GroupEntityTest {
         Group convertedGroup = entity.toDomain();
 
         // Assert
-        assertEquals(originalGroup.getGroupId(), convertedGroup.getGroupId());
-        assertEquals(originalGroup.getTournamentId(), convertedGroup.getTournamentId());
-        assertEquals(originalGroup.getGroupNumber(), convertedGroup.getGroupNumber());
-        assertEquals(originalGroup.getDisplayName(), convertedGroup.getDisplayName());
+        assertEquals(originalGroup.groupId(), convertedGroup.groupId());
+        assertEquals(originalGroup.tournamentId(), convertedGroup.tournamentId());
+        assertEquals(originalGroup.groupNumber(), convertedGroup.groupNumber());
+        assertEquals(originalGroup.displayName(), convertedGroup.displayName());
     }
 
     @Test

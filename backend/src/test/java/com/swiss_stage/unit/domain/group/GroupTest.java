@@ -25,10 +25,10 @@ class GroupTest {
         Group group = new Group(groupId, tournamentId, groupNumber);
 
         // Assert
-        assertEquals(groupId, group.getGroupId(), "groupIdが正しく設定されること");
-        assertEquals(tournamentId, group.getTournamentId(), "tournamentIdが正しく設定されること");
-        assertEquals(groupNumber, group.getGroupNumber(), "groupNumberが正しく設定されること");
-        assertEquals("GROUP 1", group.getDisplayName(), "displayNameが正しく生成されること");
+        assertEquals(groupId, group.groupId(), "groupIdが正しく設定されること");
+        assertEquals(tournamentId, group.tournamentId(), "tournamentIdが正しく設定されること");
+        assertEquals(groupNumber, group.groupNumber(), "groupNumberが正しく設定されること");
+        assertEquals("GROUP 1", group.displayName(), "displayNameが正しく生成されること");
     }
 
     @ParameterizedTest(name = "正常系: groupNumber={0}")
@@ -42,8 +42,8 @@ class GroupTest {
         Group group = new Group(groupId, tournamentId, groupNumber);
 
         // Assert
-        assertEquals(groupNumber, group.getGroupNumber(), "groupNumberが正しく設定されること");
-        assertEquals("GROUP " + groupNumber, group.getDisplayName(),
+        assertEquals(groupNumber, group.groupNumber(), "groupNumberが正しく設定されること");
+        assertEquals("GROUP " + groupNumber, group.displayName(),
                 "displayNameが'GROUP {groupNumber}'形式であること");
     }
 

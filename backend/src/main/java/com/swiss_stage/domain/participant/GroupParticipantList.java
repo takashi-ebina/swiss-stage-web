@@ -54,7 +54,7 @@ public class GroupParticipantList {
     public void removeParticipant(UUID participantId) {
         Objects.requireNonNull(participantId, "participantIdは必須です");
 
-        participants.removeIf(p -> p.getParticipantId().equals(participantId));
+        participants.removeIf(p -> p.participantId().equals(participantId));
 
         // ダミーユーザー調整
         ensureEvenCount();
@@ -89,22 +89,22 @@ public class GroupParticipantList {
     }
 
     /**
-     * ダミーユーザーを作成する
+     * ダミーユーザーを作成する ダミーユーザーの段級位は20級（最低ランク）とする
      * 
      * @return ダミーユーザー
      */
     private Participant createDummyParticipant() {
         int maxOrder = participants.stream()
-                .mapToInt(Participant::getRegistrationOrder)
+                .mapToInt(Participant::registrationOrder)
                 .max()
                 .orElse(0);
 
         return new Participant(
                 UUID.randomUUID(),
-                group.getGroupId(),
+                group.groupId(),
                 null,
                 "ダミーユーザー（不戦勝）",
-                null,
+                Rank.parse("20級"),
                 true,
                 maxOrder + 1);
     }
@@ -144,13 +144,13 @@ public class GroupParticipantList {
                         return 0;
 
                     // 段級位順（降順）
-                    int rankCompare = p1.getRank().compareTo(p2.getRank());
+                    int rankCompare = p1.rank().compareTo(p2.rank());
                     if (rankCompare != 0) {
                         return rankCompare;
                     }
 
                     // 同段級位の場合は登録順
-                    return Integer.compare(p1.getRegistrationOrder(), p2.getRegistrationOrder());
+                    return Integer.compare(p1.registrationOrder(), p2.registrationOrder());
                 })
                 .collect(Collectors.toList());
     }
@@ -163,7 +163,7 @@ public class GroupParticipantList {
     public List<Participant> exportToCsv() {
         return participants.stream()
                 .filter(p -> !p.isDummy())
-                .sorted(Comparator.comparing(Participant::getRegistrationOrder))
+                .sorted(Comparator.comparing(Participant::registrationOrder))
                 .collect(Collectors.toList());
     }
 
