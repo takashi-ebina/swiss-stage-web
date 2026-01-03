@@ -1,0 +1,429 @@
+openapi: 3.0.3
+info:
+  title: Participant API
+  description: グループ参加者管理API（CSV入出力対応）
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: ローカル開発環境
+
+tags:
+  - name: Participant
+    description: 参加者管理
+  - name: CSV
+    description: CSV入出力
+
+paths:
+  /groups/{groupId}/participants:
+    get:
+      summary: グループの参加者一覧取得
+      description: 段級位順→登録順でソート済みリストを返す（ダミーユーザー含む）
+      tags:
+        - Participant
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: グループID
+          schema:
+            type: string
+            format: uuid
+        - name: includeDummy
+          in: query
+          required: false
+          description: ダミーユーザーを含めるか
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: 参加者一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParticipantResponse'
+        '404':
+          description: グループが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    post:
+      summary: 参加者追加
+      tags:
+        - Participant
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: グループID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateParticipantRequest'
+      responses:
+        '201':
+          description: 参加者追加成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantResponse'
+        '400':
+          description: リクエストが不正です
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 参加者数上限に達しています（32名）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /participants/{participantId}:
+    get:
+      summary: 参加者詳細取得
+      tags:
+        - Participant
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          description: 参加者ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 参加者詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantResponse'
+        '404':
+          description: 参加者が見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    put:
+      summary: 参加者情報更新
+      tags:
+        - Participant
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          description: 参加者ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateParticipantRequest'
+      responses:
+        '200':
+          description: 参加者情報更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipantResponse'
+        '400':
+          description: リクエストが不正です
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: 参加者が見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    delete:
+      summary: 参加者削除
+      tags:
+        - Participant
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          description: 参加者ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 参加者削除成功
+        '404':
+          description: 参加者が見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /groups/{groupId}/participants/import:
+    post:
+      summary: CSV一括登録
+      description: |
+        CSVファイルから参加者を一括登録します。
+        - 既存の参加者は全て削除され、CSVの内容で置き換えられます
+        - 文字エンコーディングは自動検出（UTF-8/Shift-JIS対応）
+        - 最大32名まで登録可能
+      tags:
+        - CSV
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: グループID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: CSVファイル（UTF-8またはShift-JIS）
+      responses:
+        '200':
+          description: CSV一括登録成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  importedCount:
+                    type: integer
+                    description: 登録された参加者数
+                  participants:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ParticipantResponse'
+        '400':
+          description: CSVファイルの形式が不正です
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CsvErrorResponse'
+        '413':
+          description: CSVファイルのサイズが大きすぎます（最大5MB）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /groups/{groupId}/participants/export:
+    get:
+      summary: CSV出力
+      description: |
+        グループの参加者リストをCSVファイルとして出力します。
+        - ダミーユーザーは含まれません
+        - 文字エンコーディング: UTF-8（BOM付き）
+      tags:
+        - CSV
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: グループID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: CSV出力成功
+          content:
+            text/csv:
+              schema:
+                type: string
+                example: |
+                  氏名,所属,段級位
+                  山田太郎,東京道場,3段
+                  鈴木花子,大阪支部,初段
+          headers:
+            Content-Disposition:
+              description: ファイル名（group_{groupNumber}_participants.csv）
+              schema:
+                type: string
+                example: 'attachment; filename="group_1_participants.csv"'
+        '404':
+          description: グループが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ParticipantResponse:
+      type: object
+      required:
+        - participantId
+        - groupId
+        - name
+        - rank
+        - isDummy
+        - registrationOrder
+      properties:
+        participantId:
+          type: string
+          format: uuid
+          description: 参加者ID
+        groupId:
+          type: string
+          format: uuid
+          description: 所属グループID
+        affiliation:
+          type: string
+          nullable: true
+          maxLength: 100
+          description: 所属
+          example: "東京道場"
+        name:
+          type: string
+          maxLength: 50
+          description: 氏名
+          example: "山田太郎"
+        rank:
+          $ref: '#/components/schemas/RankResponse'
+        isDummy:
+          type: boolean
+          description: ダミーユーザーフラグ
+        registrationOrder:
+          type: integer
+          minimum: 1
+          maximum: 32
+          description: グループ内の登録順
+
+    RankResponse:
+      type: object
+      required:
+        - level
+        - displayName
+      properties:
+        level:
+          type: integer
+          description: 段級位レベル（段は正数、級は負数）
+          example: 3
+        displayName:
+          type: string
+          description: 表示名
+          example: "3段"
+
+    CreateParticipantRequest:
+      type: object
+      required:
+        - name
+        - rank
+      properties:
+        affiliation:
+          type: string
+          maxLength: 100
+          nullable: true
+          description: 所属
+          example: "東京道場"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: 氏名
+          example: "山田太郎"
+        rank:
+          type: string
+          pattern: '^(初段|[2-9]段|[1-9]級|1[0-9]級|20級)$'
+          description: "段級位（例: 初段、3段、9段、1級、3級、20級）"
+          example: "3段"
+
+    UpdateParticipantRequest:
+      type: object
+      required:
+        - name
+        - rank
+      properties:
+        affiliation:
+          type: string
+          maxLength: 100
+          nullable: true
+          description: 所属
+          example: "東京道場"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: 氏名
+          example: "山田太郎"
+        rank:
+          type: string
+          pattern: ^(初段|[2-9]段|[1-9]級|1[0-9]級|20級)$
+          description: "段級位（例: 初段、3段、9段、1級、3級、20級）"
+          example: "3段"
+
+    CsvErrorResponse:
+      type: object
+      required:
+        - message
+        - timestamp
+      properties:
+        message:
+          type: string
+          description: エラーメッセージ
+          example: "CSVファイルの形式が不正です"
+        timestamp:
+          type: string
+          format: date-time
+          description: エラー発生日時
+        invalidRows:
+          type: array
+          description: エラーが発生した行の詳細
+          items:
+            type: object
+            properties:
+              rowNumber:
+                type: integer
+                description: 行番号（1始まり）
+              errorMessage:
+                type: string
+                description: エラー内容
+                example: "段級位の形式が不正です: abc段"
+
+    ErrorResponse:
+      type: object
+      required:
+        - message
+        - timestamp
+      properties:
+        message:
+          type: string
+          description: エラーメッセージ
+        timestamp:
+          type: string
+          format: date-time
+          description: エラー発生日時
+        details:
+          type: array
+          items:
+            type: string
+          description: エラー詳細（バリデーションエラー時）
