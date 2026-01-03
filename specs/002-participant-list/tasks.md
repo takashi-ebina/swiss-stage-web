@@ -184,11 +184,11 @@
 - `backend/src/test/java/com/swiss_stage/unit/infrastructure/dynamodb/entity/ParticipantEntityTest.java`
 
 **受け入れ条件**:
-- [ ] `GroupEntity`がDynamoDB属性アノテーション（@DynamoDbPartitionKey, @DynamoDbSortKey）を持つ
-- [ ] `ParticipantEntity`がGSI用の属性を持つ
-- [ ] `toDomain()`メソッドでドメインエンティティに変換
-- [ ] `fromDomain()`メソッドでDynamoDBエンティティに変換
-- [ ] 単体テストで双方向変換を検証
+- [x] `GroupEntity`がDynamoDB属性アノテーション（@DynamoDbPartitionKey, @DynamoDbSortKey）を持つ
+- [x] `ParticipantEntity`がGSI用の属性を持つ
+- [x] `toDomain()`メソッドでドメインエンティティに変換
+- [x] `fromDomain()`メソッドでDynamoDBエンティティに変換
+- [x] 単体テストで双方向変換を検証
 
 **依存**: Task 1.2 (Group), Task 1.3 (Participant)
 
