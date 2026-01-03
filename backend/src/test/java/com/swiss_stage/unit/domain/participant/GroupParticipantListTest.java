@@ -21,16 +21,16 @@ class GroupParticipantListTest {
         return new Group(UUID.randomUUID(), UUID.randomUUID(), 1);
     }
 
-    private Participant createTestParticipant(UUID groupId, String name, String rankStr, int order) {
+    private Participant createTestParticipant(UUID groupId, String name, String rankStr,
+            int order) {
         return new Participant(
-            UUID.randomUUID(),
-            groupId,
-            null,
-            name,
-            Rank.parse(rankStr),
-            false,
-            order
-        );
+                UUID.randomUUID(),
+                groupId,
+                null,
+                name,
+                Rank.parse(rankStr),
+                false,
+                order);
     }
 
     @Test
@@ -75,8 +75,10 @@ class GroupParticipantListTest {
 
         // Assert
         assertEquals(2, list.getParticipantCount(), "2名追加後、ダミーが削除されて2名");
-        assertEquals(2, list.getParticipants().stream().filter(p -> !p.isDummy()).count(), "実参加者は2名");
-        assertEquals(0, list.getParticipants().stream().filter(Participant::isDummy).count(), "ダミーユーザーは0名");
+        assertEquals(2, list.getParticipants().stream().filter(p -> !p.isDummy()).count(),
+                "実参加者は2名");
+        assertEquals(0, list.getParticipants().stream().filter(Participant::isDummy).count(),
+                "ダミーユーザーは0名");
     }
 
     @Test
@@ -84,7 +86,7 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        
+
         // 32名追加
         for (int i = 1; i <= 32; i++) {
             list.addParticipant(createTestParticipant(group.getGroupId(), "参加者" + i, "3段", i));
@@ -99,7 +101,7 @@ class GroupParticipantListTest {
         // Arrange
         Group group = createTestGroup();
         GroupParticipantList list = new GroupParticipantList(group);
-        
+
         // 32名追加
         for (int i = 1; i <= 32; i++) {
             list.addParticipant(createTestParticipant(group.getGroupId(), "参加者" + i, "3段", i));
@@ -107,10 +109,10 @@ class GroupParticipantListTest {
 
         // Act & Assert
         DomainException exception = assertThrows(
-            DomainException.class,
-            () -> list.addParticipant(createTestParticipant(group.getGroupId(), "参加者33", "3段", 33)),
-            "33名目の追加でDomainExceptionがスローされること"
-        );
+                DomainException.class,
+                () -> list.addParticipant(
+                        createTestParticipant(group.getGroupId(), "参加者33", "3段", 33)),
+                "33名目の追加でDomainExceptionがスローされること");
         assertTrue(exception.getMessage().contains("32名"), "エラーメッセージに上限情報が含まれること");
     }
 
@@ -129,8 +131,10 @@ class GroupParticipantListTest {
 
         // Assert
         assertEquals(2, list.getParticipantCount(), "1名削除後、ダミーが追加されて2名");
-        assertEquals(1, list.getParticipants().stream().filter(p -> !p.isDummy()).count(), "実参加者は1名");
-        assertEquals(1, list.getParticipants().stream().filter(Participant::isDummy).count(), "ダミーユーザーが1名");
+        assertEquals(1, list.getParticipants().stream().filter(p -> !p.isDummy()).count(),
+                "実参加者は1名");
+        assertEquals(1, list.getParticipants().stream().filter(Participant::isDummy).count(),
+                "ダミーユーザーが1名");
     }
 
     @Test
@@ -150,8 +154,10 @@ class GroupParticipantListTest {
 
         // Assert
         assertEquals(2, list.getParticipantCount(), "1名削除後、ダミーが削除されて2名");
-        assertEquals(2, list.getParticipants().stream().filter(p -> !p.isDummy()).count(), "実参加者は2名");
-        assertEquals(0, list.getParticipants().stream().filter(Participant::isDummy).count(), "ダミーユーザーは0名");
+        assertEquals(2, list.getParticipants().stream().filter(p -> !p.isDummy()).count(),
+                "実参加者は2名");
+        assertEquals(0, list.getParticipants().stream().filter(Participant::isDummy).count(),
+                "ダミーユーザーは0名");
     }
 
     @Test
