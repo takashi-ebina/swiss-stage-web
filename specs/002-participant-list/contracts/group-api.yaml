@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  title: Group API
+  description: トーナメントのグループ管理API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: ローカル開発環境
+
+tags:
+  - name: Group
+    description: グループ管理
+
+paths:
+  /tournaments/{tournamentId}/groups:
+    get:
+      summary: トーナメントのグループ一覧取得
+      tags:
+        - Group
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          description: トーナメントID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: グループ一覧取得成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupResponse'
+        '404':
+          description: トーナメントが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    post:
+      summary: グループ作成
+      tags:
+        - Group
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          description: トーナメントID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupRequest'
+      responses:
+        '201':
+          description: グループ作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '400':
+          description: リクエストが不正です
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: グループ数上限に達しています（最大8グループ）
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /groups/{groupId}:
+    get:
+      summary: グループ詳細取得
+      tags:
+        - Group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: グループID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: グループ詳細取得成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '404':
+          description: グループが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+    delete:
+      summary: グループ削除
+      tags:
+        - Group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          description: グループID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: グループ削除成功
+        '404':
+          description: グループが見つかりません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: 参加者が存在するため削除できません
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    GroupResponse:
+      type: object
+      required:
+        - groupId
+        - tournamentId
+        - groupNumber
+        - displayName
+        - participantCount
+      properties:
+        groupId:
+          type: string
+          format: uuid
+          description: グループID
+        tournamentId:
+          type: string
+          format: uuid
+          description: 所属トーナメントID
+        groupNumber:
+          type: integer
+          minimum: 1
+          maximum: 8
+          description: グループ番号（1〜8）
+        displayName:
+          type: string
+          description: 表示名
+          example: "GROUP 1"
+        participantCount:
+          type: integer
+          minimum: 0
+          maximum: 32
+          description: 参加者数（ダミーユーザー除く）
+
+    CreateGroupRequest:
+      type: object
+      required:
+        - groupNumber
+      properties:
+        groupNumber:
+          type: integer
+          minimum: 1
+          maximum: 8
+          description: グループ番号（1〜8）
+
+    ErrorResponse:
+      type: object
+      required:
+        - message
+        - timestamp
+      properties:
+        message:
+          type: string
+          description: エラーメッセージ
+        timestamp:
+          type: string
+          format: date-time
+          description: エラー発生日時
+        details:
+          type: array
+          items:
+            type: string
+          description: エラー詳細（バリデーションエラー時）

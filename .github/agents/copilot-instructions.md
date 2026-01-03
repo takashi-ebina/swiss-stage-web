@@ -26,3 +26,9 @@
 
 <!-- 手動追加 START -->
 <!-- 手動追加 END -->
+
+## Active Technologies
+- DynamoDB（Group、Participant テーブル） (002-participant-list)
+
+## Recent Changes
+- 002-participant-list: Added DynamoDB（Group、Participant テーブル）
