@@ -5,24 +5,27 @@
     <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="swiss-stage"/>
     
     <!-- Console Appender with JSON format -->
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <includeContext>true</includeContext>
-            <includeMdc>true</includeMdc>
-            <includeTags>true</includeTags>
-            <includeCallerData>false</includeCallerData>
-            <fieldNames>
-                <timestamp>timestamp</timestamp>
-                <version>version</version>
-                <message>message</message>
-                <logger>logger</logger>
-                <thread>thread</thread>
-                <level>level</level>
-                <levelValue>levelValue</levelValue>
-            </fieldNames>
+    <springProfile name="!local">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <includeContext>true</includeContext>
+                <includeMdc>true</includeMdc>
+                <includeTags>true</includeTags>
+                <includeCallerData>false</includeCallerData>
+                <fieldNames>
+                    <timestamp>timestamp</timestamp>
+                    <version>version</version>
+                    <message>message</message>
+                    <logger>logger</logger>
+                    <thread>thread</thread>
+                    <level>level</level>
+                    <levelValue>levelValue</levelValue>
+                </fieldNames>
             <customFields>{"application":"${appName}"}</customFields>
         </encoder>
     </appender>
+    </springProfile>
+
     
     <!-- CloudWatch Logs Appender (for production) -->
     <!-- Note: Configure AWS CloudWatch Logs in production environment -->
@@ -37,8 +40,23 @@
     <!-- Spring Framework logging -->
     <logger name="org.springframework.web" level="INFO"/>
     <logger name="org.springframework.security" level="INFO"/>
+    <!-- Set the log level to INFO to output personal information -->
+    <logger name="org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter" level="INFO"/>
     
     <!-- AWS SDK logging -->
     <logger name="software.amazon.awssdk" level="WARN"/>
     
+    <!-- Human-friendly console for local development -->
+    <springProfile name="local">
+        <appender name="CONSOLE_HUMAN" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n%ex{full}</pattern>
+            </encoder>
+        </appender>
+
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE_HUMAN"/>
+        </root>
+    </springProfile>
+
 </configuration>

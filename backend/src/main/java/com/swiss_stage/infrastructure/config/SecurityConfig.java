@@ -4,6 +4,8 @@ import com.swiss_stage.presentation.filter.JwtAuthenticationFilter;
 import com.swiss_stage.presentation.handler.OAuth2AuthenticationSuccessHandler;
 import com.swiss_stage.presentation.handler.OAuth2AuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +28,8 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+
     @Value("${app.frontend.url:http://localhost:3000}")
     private String frontendUrl;
 
@@ -39,10 +43,15 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
         this.oAuth2AuthenticationFailureHandler = oAuth2AuthenticationFailureHandler;
+
+        logger.info("SecurityConfig constructed. jwtFilter={}, successHandler={}, failureHandler={}",
+            jwtAuthenticationFilter.getClass().getName(),
+            oAuth2AuthenticationSuccessHandler.getClass().getName(),
+            oAuth2AuthenticationFailureHandler.getClass().getName());
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {        
         http
             .csrf(csrf -> csrf.disable()) // REST APIのためCSRFを無効化（JWTトークンベース認証を使用）
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -53,13 +62,11 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
-                .loginPage(frontendUrl + "/login")
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler)
-                .defaultSuccessUrl(frontendUrl + "/dashboard", true)
+                    .loginPage(frontendUrl + "/login")
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler)
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

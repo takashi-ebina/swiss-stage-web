@@ -5,7 +5,6 @@ import com.swiss_stage.application.service.JwtService;
 import com.swiss_stage.application.service.UserService;
 import com.swiss_stage.common.util.LoggingUtil;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -44,11 +43,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         this.userService = userService;
         this.jwtService = jwtService;
         this.frontendUrl = frontendUrl;
+        logger.info("OAuth2AuthenticationSuccessHandler created: instance={}", this);
     }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+        logger.info(">>> OAuth2AuthenticationSuccessHandler.onAuthenticationSuccess CALLED <<<");
+        
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
         
         // Google IDとユーザー情報を取得
@@ -64,14 +66,23 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         // JWTトークンを生成
         String token = jwtService.generateToken(user.getUserId());
 
-        // HTTP-only Cookieにトークンを設定
-        Cookie cookie = new Cookie("jwt_token", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true); // HTTPS必須
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60); // 24時間
+        // Set-Cookieを手動で設定してSameSite/Secureを環境に応じて制御
+        int maxAge = 24 * 60 * 60; // 24時間
+        StringBuilder cookieBuilder = new StringBuilder();
+        cookieBuilder.append("jwt_token=").append(token)
+                .append("; Path=/")
+                .append("; Max-Age=").append(maxAge)
+                .append("; HttpOnly");
 
-        response.addCookie(cookie);
+        boolean secure = frontendUrl != null && frontendUrl.startsWith("https");
+        if (secure) {
+            cookieBuilder.append("; Secure; SameSite=None");
+        } else {
+            // ローカルHTTP環境向け（WSL/localhostなど）では Secure を無効化し SameSite=Lax を使用
+            cookieBuilder.append("; SameSite=Lax");
+        }
+
+        response.setHeader("Set-Cookie", cookieBuilder.toString());
 
         logger.info("User authenticated successfully. userId={}", user.getUserId());
 

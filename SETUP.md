@@ -118,6 +118,30 @@ docker run -d -p 8000:8000 --name dynamodb-local amazon/dynamodb-local
 
 ### 4.2 テーブル作成
 
+#### 4.2.1 AWS CLIインストール確認
+
+```bash
+sudo apt update
+sudo apt install -y unzip curl
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
+```
+
+#### 4.2.2 AWS クレデンシャル設定
+
+```bash
+aws configure
+```
+
+- AWS Access Key ID [None]: dummy
+- AWS Secret Access Key [None]: dummy
+- Default region name [None]: ap-northeast-1
+- Default output format [None]: json
+
+#### 4.2.3 テーブル作成
+
 ```bash
 aws dynamodb create-table \
     --table-name swiss_stage_table \
@@ -139,7 +163,7 @@ aws dynamodb create-table \
 ### 4.3 テーブル確認
 
 ```bash
-aws dynamodb list-tables --endpoint-url http://localhost:8000
+aws dynamodb list-tables --endpoint-url http://localhost:8000 
 ```
 
 **期待される出力**:
