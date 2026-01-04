@@ -19,12 +19,13 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import org.mockito.ArgumentMatchers;
 
 /**
  * DynamoDBGroupRepositoryの単体テスト DynamoDBクライアントをモック化して動作を検証
  */
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("unchecked")
+
 class DynamoDBGroupRepositoryTest {
 
     @Mock
@@ -37,7 +38,8 @@ class DynamoDBGroupRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        when(enhancedClient.table(eq("Group"), any(TableSchema.class))).thenReturn(groupTable);
+        when(enhancedClient.table(eq("Group"), ArgumentMatchers.<TableSchema<GroupEntity>>any()))
+                .thenReturn(groupTable);
         repository = new DynamoDBGroupRepository(enhancedClient);
     }
 

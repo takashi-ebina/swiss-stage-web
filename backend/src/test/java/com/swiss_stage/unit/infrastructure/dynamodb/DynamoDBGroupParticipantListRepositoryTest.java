@@ -9,6 +9,7 @@ import com.swiss_stage.infrastructure.dynamodb.entity.ParticipantEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -22,13 +23,13 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
  * DynamoDBGroupParticipantListRepositoryの単体テスト DynamoDBクライアントをモック化して動作を検証
  */
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings({"unchecked", "deprecation"})
 class DynamoDBGroupParticipantListRepositoryTest {
 
     @Mock
@@ -44,8 +45,9 @@ class DynamoDBGroupParticipantListRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        when(enhancedClient.table(eq("Participant"), any(TableSchema.class)))
-                .thenReturn(participantTable);
+        when(enhancedClient.table(eq("Participant"),
+                ArgumentMatchers.<TableSchema<ParticipantEntity>>any()))
+                        .thenReturn(participantTable);
         when(participantTable.index("groupId-rankLevel-index")).thenReturn(rankLevelIndex);
         repository = new DynamoDBGroupParticipantListRepository(enhancedClient);
     }
@@ -58,7 +60,9 @@ class DynamoDBGroupParticipantListRepositoryTest {
         ParticipantEntity entity1 = createParticipantEntity(groupId, "参加者1", "3段", 1);
         ParticipantEntity entity2 = createParticipantEntity(groupId, "参加者2", "初段", 2);
 
-        Page<ParticipantEntity> page = Page.create(Arrays.asList(entity1, entity2));
+        Page<ParticipantEntity> page = Page.builder(ParticipantEntity.class)
+                .items(Arrays.asList(entity1, entity2))
+                .build();
         when(participantTable.query(any(QueryEnhancedRequest.class)))
                 .thenReturn(() -> Collections.singletonList(page).iterator());
 
@@ -85,7 +89,9 @@ class DynamoDBGroupParticipantListRepositoryTest {
         ParticipantEntity entity3 = createParticipantEntity(groupId, "参加者3", "3段", 3);
 
         // GSIクエリ結果（段級位降順）
-        Page<ParticipantEntity> page = Page.create(Arrays.asList(entity2, entity3, entity1));
+        Page<ParticipantEntity> page = Page.builder(ParticipantEntity.class)
+                .items(Arrays.asList(entity2, entity3, entity1))
+                .build();
         when(rankLevelIndex.query(any(QueryEnhancedRequest.class)))
                 .thenReturn(() -> Collections.singletonList(page).iterator());
 
@@ -112,7 +118,9 @@ class DynamoDBGroupParticipantListRepositoryTest {
         list.addParticipant(p1);
 
         // deleteAllByGroupIdのモック（空のページを返す）
-        Page<ParticipantEntity> emptyPage = Page.create(Collections.emptyList());
+        Page<ParticipantEntity> emptyPage = Page.builder(ParticipantEntity.class)
+                .items(Collections.emptyList())
+                .build();
         when(participantTable.query(any(QueryEnhancedRequest.class)))
                 .thenReturn(() -> Collections.singletonList(emptyPage).iterator());
 
